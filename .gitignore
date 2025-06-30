@@ -1,0 +1,8 @@
+/target/
+*.iml
+*.class
+*.log
+/.idea/
+/nbproject/private/
+*.DS_Store
+*.swp

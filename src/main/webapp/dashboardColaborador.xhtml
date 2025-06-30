@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Dashboard Colaborador</title>
+    </h:head>
+    <h:body>
+        <h2>Bienvenido, #{loginBean.colaboradorLogueado.nombreColab} #{loginBean.colaboradorLogueado.apellidoColab}!</h2>
+        <h3>Tus Tickets Asignados</h3>
+
+        <h:form id="formTicketsColab">
+            <p:dataTable value="#{ticketBean.ticketsColaborador}" var="ticket"
+                         selection="#{ticketBean.ticketSeleccionado}" selectionMode="single" rowKey="#{ticket.idSolicitud}">
+                <p:column headerText="ID">
+                    <h:outputText value="#{ticket.idSolicitud}" />
+                </p:column>
+                <p:column headerText="Cliente">
+                    <h:outputText value="#{ticket.nombreCliente}" />
+                </p:column>
+                <p:column headerText="Tipo">
+                    <h:outputText value="#{ticket.nombreTipoSolicitud}" />
+                </p:column>
+                <p:column headerText="Aplicación">
+                    <h:outputText value="#{ticket.nombreAplicacion}" />
+                </p:column>
+                <p:column headerText="Asunto">
+                    <h:outputText value="#{ticket.asunto}" />
+                </p:column>
+                <p:column headerText="Estado">
+                    <h:outputText value="#{ticket.estado.label}" />
+                </p:column>
+                <p:column headerText="Prioridad">
+                    <h:outputText value="#{ticket.prioridad.label}" />
+                </p:column>
+                <p:column headerText="Fecha">
+                    <h:outputText value="#{ticket.fechaCreacion}" />
+                </p:column>
+                <p:column>
+                    <!-- Editar ticket (si aplica) -->
+                    <p:commandButton value="Actualizar"
+                                     action="#{ticketBean.setTicketSeleccionado(ticket)}"
+                                     oncomplete="PF('dlgEditTicketColab').show()" update=":formEditTicketColab"/>
+
+                    <!-- Asignar solo si soy coordinador de ese ticket -->
+                    <p:commandButton value="Asignar"
+                                     rendered="#{asignacionBean.esCoordinadorDelTicket(ticket.idSolicitud)}"
+                                     action="#{asignacionBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
+                                     oncomplete="PF('dlgAsignar').show()"
+                                     update=":formAsignar"/>
+                    <!-- Botón o icono para ver/registrar actividades de un ticket -->
+                    <p:commandButton value="Ver Actividades" 
+                                     action="#{actividadBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
+                                     process="@this"
+                                     update=":formActividades"
+                                     oncomplete="PF('dlgActividades').show();" />
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <!-- Modal para actualizar ticket -->
+        <p:dialog header="Actualizar Ticket" widgetVar="dlgEditTicketColab" modal="true">
+            <h:form id="formEditTicketColab">
+                <h:panelGrid columns="2">
+                    <h:outputText value="Motivo:"/>
+                    <p:inputTextarea value="#{ticketBean.ticketSeleccionado.motivo}" />
+                    <h:outputText value="Prioridad:"/>
+                    <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.prioridad}">
+                        <f:selectItems value="#{ticketBean.prioridades}" var="prio"
+                                       itemLabel="#{prio.label}" itemValue="#{prio}" />
+                    </p:selectOneMenu>
+                    <h:outputText value="Estado:"/>
+                    <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.estado}">
+                        <f:selectItems value="#{ticketBean.estados}" var="est"
+                                       itemLabel="#{est.label}" itemValue="#{est}" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <p:commandButton value="Guardar Cambios"
+                                 action="#{ticketBean.actualizarTicketColaborador}"
+                                 oncomplete="PF('dlgEditTicketColab').hide()" update=":formTicketsColab"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Modal para asignar colaborador -->
+        <p:dialog header="Asignar Colaborador" widgetVar="dlgAsignar" modal="true">
+            <h:form id="formAsignar">
+                <h:panelGrid columns="2">
+                    <h:outputText value="Colaborador:"/>
+                    <p:selectOneMenu value="#{asignacionBean.nuevaAsignacion.idColaborador}">
+                        <f:selectItems value="#{asignacionBean.colaboradores}" var="colab"
+                                       itemLabel="#{colab.nombreColab} #{colab.apellidoColab}" itemValue="#{colab.idColaborador}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="¿Es Coordinador?"/>
+                    <p:selectBooleanCheckbox value="#{asignacionBean.nuevaAsignacion.esCoordinador}" />
+                </h:panelGrid>
+                <p:commandButton value="Asignar"
+                                 action="#{asignacionBean.registrarAsignacion}"
+                                 oncomplete="PF('dlgAsignar').hide();"
+                                 update=":formTicketsColab"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Modal/Diálogo de actividades -->
+        <p:dialog header="Actividades del Ticket" widgetVar="dlgActividades" modal="true">
+            <h:form id="formActividades">
+                <p:dataTable value="#{actividadBean.actividadesPorSolicitud}" var="act">
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{act.inicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Colaborador">
+                        <h:outputText value="#{act.nombreColaborador}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{act.descripcion}" />
+                    </p:column>
+                </p:dataTable>
+                <h3>Registrar Nueva Actividad</h3>
+                <h:panelGrid columns="1" rendered="#{not actividadBean.ticketEstaSolucionado()}">
+                    <p:inputTextarea value="#{actividadBean.nuevaActividad.descripcion}" />
+                    <h:outputText value="¿Es la última actividad?"/>
+                    <p:selectBooleanCheckbox value="#{actividadBean.nuevaActividad.esFinal}" />
+                    <p:commandButton value="Registrar"
+                                     action="#{actividadBean.registrarActividad}"
+                                     update="formActividades"/>
+                </h:panelGrid>
+                <h:outputText value="Este ticket ya está solucionado. No se pueden agregar más actividades."
+                              rendered="#{actividadBean.ticketEstaSolucionado()}" style="color:red"/>
+            </h:form>
+        </p:dialog>
+
+        <h:form>
+            <p:commandButton value="Gestionar Colaboradores" action="colaboradores?faces-redirect=true"/>
+            <p:commandButton value="Gestionar Empresas" action="empresas?faces-redirect=true"/>
+            <p:commandButton value="Cerrar Sesión" action="#{loginBean.logout}"/>
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Roles</title>
+    </h:head>
+    <h:body>
+        <h:form id="formRegistroRol">
+            <p:commandButton value="Volver" action="colaboradores?faces-redirect=true"/>
+            <h2>Registrar Rol</h2>
+            <h:panelGrid columns="2">
+                <h:outputText value="Nombre Rol:"/>
+                <p:inputText value="#{rolBean.nuevoRol.nombreRol}" />
+            </h:panelGrid>
+            <p:commandButton value="Registrar" action="#{rolBean.registrarRol}" update="formRoles"/>
+        </h:form>
+
+        <h2>Lista de Roles</h2>
+        <h:form id="formRoles">
+            <p:dataTable value="#{rolBean.roles}" var="rol" selection="#{rolBean.rolSeleccionado}" selectionMode="single" rowKey="#{rol.idRol}">
+                <p:column headerText="ID">
+                    <h:outputText value="#{rol.idRol}" />
+                </p:column>
+                <p:column headerText="Nombre Rol">
+                    <h:outputText value="#{rol.nombreRol}" />
+                </p:column>
+                <p:column>
+                    <p:commandButton value="Editar" action="#{rolBean.seleccionarParaEditar(rol)}" oncomplete="PF('dlgEditarRol').show()" update=":formEditarRol"/>
+                    <p:commandButton value="Eliminar" action="#{rolBean.eliminarRol(rol.idRol)}" update="formRoles"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+        <p:dialog header="Editar Rol" widgetVar="dlgEditarRol" modal="true">
+            <h:form id="formEditarRol">
+                <h:panelGrid columns="2">
+                    <h:outputText value="Nombre Rol:"/>
+                    <p:inputText value="#{rolBean.rolSeleccionado.nombreRol}" />
+                </h:panelGrid>
+                <p:commandButton value="Guardar" action="#{rolBean.actualizarRol}" oncomplete="PF('dlgEditarRol').hide()" update=":formRoles"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
