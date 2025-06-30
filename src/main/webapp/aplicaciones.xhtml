@@ -2,57 +2,73 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="jakarta.faces.core">
-    <h:head>
-        <title>Aplicaciones</title>
-    </h:head>
-    <h:body>
-        <h:form id="formRegistroApp">
-            <p:commandButton value="Volver" action="empresas?faces-redirect=true"/>
-            <h2>Registrar Aplicación</h2>
-            <h:panelGrid columns="2">
-                <h:outputText value="Empresa:"/>
-                <p:selectOneMenu value="#{aplicacionBean.nuevaAplicacion.idEmpresa}">
-                    <f:selectItems value="#{aplicacionBean.empresas}" var="emp"
-                                   itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
-                </p:selectOneMenu>
-                <h:outputText value="Tipo de Aplicación:"/>
-                <p:inputText value="#{aplicacionBean.nuevaAplicacion.tipoAplicacion}" />
-            </h:panelGrid>
-            <p:commandButton value="Registrar" action="#{aplicacionBean.registrarAplicacion}" update="formAplicaciones"/>
-        </h:form>
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Aplicaciones</title>
+    <h:outputStylesheet library="css" name="custom.css"/>
+</h:head>
+<h:body>
+    <div class="layout">
+        <!-- Incluye navbar y sidebar reutilizables -->
+        <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
+        <div class="content-with-sidebar">
+            <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
+            <main class="main-content">
+                <h:form id="formRegistroApp">
+                    <p:commandButton value="Volver" action="empresas?faces-redirect=true"/>
+                    <h2>Registrar Aplicación</h2>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Empresa:"/>
+                        <p:selectOneMenu value="#{aplicacionBean.nuevaAplicacion.idEmpresa}">
+                            <f:selectItems value="#{aplicacionBean.empresas}" var="emp"
+                                           itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Tipo de Aplicación:"/>
+                        <p:inputText value="#{aplicacionBean.nuevaAplicacion.tipoAplicacion}" />
+                    </h:panelGrid>
+                    <p:commandButton value="Registrar" action="#{aplicacionBean.registrarAplicacion}" update="formAplicaciones"/>
+                </h:form>
 
-        <h2>Lista de Aplicaciones</h2>
-        <h:form id="formAplicaciones">
-            <p:dataTable value="#{aplicacionBean.aplicaciones}" var="app" selection="#{aplicacionBean.aplicacionSeleccionada}" selectionMode="single" rowKey="#{app.idAplicacion}">
-                <p:column headerText="ID">
-                    <h:outputText value="#{app.idAplicacion}" />
-                </p:column>
-                <p:column headerText="Empresa">
-                    <h:outputText value="#{aplicacionBean.obtenerNombreEmpresaPorId(app.idEmpresa)}"/>
-                </p:column>
-                <p:column headerText="Tipo Aplicación">
-                    <h:outputText value="#{app.tipoAplicacion}" />
-                </p:column>
-                <p:column>
-                    <p:commandButton value="Editar" action="#{aplicacionBean.seleccionarParaEditar(app)}" oncomplete="PF('dlgEditarApp').show()" update=":formEditarApp"/>
-                    <p:commandButton value="Eliminar" action="#{aplicacionBean.eliminarAplicacion(app.idAplicacion)}" update="formAplicaciones"/>
-                </p:column>
-            </p:dataTable>
-        </h:form>
-        <p:dialog header="Editar Aplicación" widgetVar="dlgEditarApp" modal="true">
-            <h:form id="formEditarApp">
-                <h:panelGrid columns="2">
-                    <h:outputText value="Empresa:"/>
-                    <p:selectOneMenu value="#{aplicacionBean.aplicacionSeleccionada.idEmpresa}">
-                        <f:selectItems value="#{aplicacionBean.empresas}" var="emp"
-                                       itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
-                    </p:selectOneMenu>
-                    <h:outputText value="Tipo de Aplicación:"/>
-                    <p:inputText value="#{aplicacionBean.aplicacionSeleccionada.tipoAplicacion}" />
-                </h:panelGrid>
-                <p:commandButton value="Guardar" action="#{aplicacionBean.actualizarAplicacion}" oncomplete="PF('dlgEditarApp').hide()" update=":formAplicaciones"/>
-            </h:form>
-        </p:dialog>
-    </h:body>
+                <h2>Lista de Aplicaciones</h2>
+                <h:form id="formAplicaciones">
+                    <p:dataTable value="#{aplicacionBean.aplicaciones}" var="app"
+                                 selection="#{aplicacionBean.aplicacionSeleccionada}" selectionMode="single" rowKey="#{app.idAplicacion}">
+                        <p:column headerText="ID">
+                            <h:outputText value="#{app.idAplicacion}" />
+                        </p:column>
+                        <p:column headerText="Empresa">
+                            <h:outputText value="#{aplicacionBean.obtenerNombreEmpresaPorId(app.idEmpresa)}"/>
+                        </p:column>
+                        <p:column headerText="Tipo Aplicación">
+                            <h:outputText value="#{app.tipoAplicacion}" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar"
+                                             action="#{aplicacionBean.seleccionarParaEditar(app)}"
+                                             oncomplete="PF('dlgEditarApp').show()" update=":formEditarApp"/>
+                            <p:commandButton value="Eliminar"
+                                             action="#{aplicacionBean.eliminarAplicacion(app.idAplicacion)}"
+                                             update="formAplicaciones"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+                <p:dialog header="Editar Aplicación" widgetVar="dlgEditarApp" modal="true">
+                    <h:form id="formEditarApp">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Empresa:"/>
+                            <p:selectOneMenu value="#{aplicacionBean.aplicacionSeleccionada.idEmpresa}">
+                                <f:selectItems value="#{aplicacionBean.empresas}" var="emp"
+                                               itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
+                            </p:selectOneMenu>
+                            <h:outputText value="Tipo de Aplicación:"/>
+                            <p:inputText value="#{aplicacionBean.aplicacionSeleccionada.tipoAplicacion}" />
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar" action="#{aplicacionBean.actualizarAplicacion}" oncomplete="PF('dlgEditarApp').hide()" update=":formAplicaciones"/>
+                    </h:form>
+                </p:dialog>
+            </main>
+        </div>
+    </div>
+</h:body>
 </html>

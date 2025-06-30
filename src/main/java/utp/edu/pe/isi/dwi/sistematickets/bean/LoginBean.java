@@ -30,7 +30,7 @@ public class LoginBean implements Serializable {
 
     public String login() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        
+
         if ("cliente".equals(tipoUsuario)) {
             clienteLogueado = loginDAO.loginCliente(email, password);
             if (clienteLogueado != null) {
@@ -57,4 +57,15 @@ public class LoginBean implements Serializable {
         tipoUsuario = "cliente";
         return "login?faces-redirect=true";
     }
+
+    public String nombreUsuario() {
+        if (colaboradorLogueado != null) {
+            return colaboradorLogueado.getNombreColab() + " " + colaboradorLogueado.getApellidoColab();
+        }
+        if (clienteLogueado != null) {
+            return clienteLogueado.getNombreCliente() + " " + clienteLogueado.getApellidoCliente();
+        }
+        return "Usuario";
+    }
+
 }

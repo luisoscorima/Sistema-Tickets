@@ -2,87 +2,106 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="jakarta.faces.core">
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
 <h:head>
     <title>Dashboard Cliente</title>
+    <!-- IMPORTANTE: Tu CSS personalizado debe ir después de los temas de PrimeFaces -->
+    <h:outputStylesheet library="css" name="custom.css"/>
 </h:head>
 <h:body>
-    <h2>Bienvenido, #{loginBean.clienteLogueado.nombreCliente}!</h2>
+    <div class="layout">
+        <!-- Incluye navbar y sidebar -->
+        <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
+        <div class="content-with-sidebar">
+            <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
+            <main class="main-content">
+                <h2>Bienvenido, #{loginBean.clienteLogueado.nombreCliente}!</h2>
 
-    <h:form id="formNuevoTicket">
-        <h3>Registrar Nuevo Ticket</h3>
-        <h:panelGrid columns="2">
-            <h:outputText value="Tipo de Solicitud:"/>
-            <p:selectOneMenu value="#{ticketBean.nuevoTicket.idTipoSolicitud}">
-                <f:selectItems value="#{tipoSolicitudBean.tipos}" var="tipo"
-                               itemLabel="#{tipo.descripcion}" itemValue="#{tipo.idTipoSolicitud}" />
-            </p:selectOneMenu>
-            <h:outputText value="Aplicación:"/>
-            <p:selectOneMenu value="#{ticketBean.nuevoTicket.idAplicacion}">
-                <f:selectItems value="#{aplicacionBean.aplicaciones}" var="app"
-                               itemLabel="#{app.tipoAplicacion}" itemValue="#{app.idAplicacion}" />
-            </p:selectOneMenu>
-            <h:outputText value="Asunto:"/>
-            <p:inputText value="#{ticketBean.nuevoTicket.asunto}" />
-            <h:outputText value="Motivo:"/>
-            <p:inputTextarea value="#{ticketBean.nuevoTicket.motivo}" />
-            <h:outputText value="Prioridad:"/>
-            <p:selectOneMenu value="#{ticketBean.nuevoTicket.prioridad}">
-                <f:selectItems value="#{ticketBean.prioridades}" var="prio"
-                               itemLabel="#{prio.label}" itemValue="#{prio}" />
-            </p:selectOneMenu>
-        </h:panelGrid>
-        <p:commandButton value="Registrar" action="#{ticketBean.registrarTicketCliente}" update=":formTickets"/>
-    </h:form>
+                <h:form id="formNuevoTicket">
+                    <h3>Registrar Nuevo Ticket</h3>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Tipo de Solicitud:"/>
+                        <p:selectOneMenu value="#{ticketBean.nuevoTicket.idTipoSolicitud}">
+                            <f:selectItems value="#{tipoSolicitudBean.tipos}" var="tipo"
+                                           itemLabel="#{tipo.descripcion}" itemValue="#{tipo.idTipoSolicitud}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Aplicación:"/>
+                        <p:selectOneMenu value="#{ticketBean.nuevoTicket.idAplicacion}">
+                            <f:selectItems value="#{aplicacionBean.aplicaciones}" var="app"
+                                           itemLabel="#{app.tipoAplicacion}" itemValue="#{app.idAplicacion}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Asunto:"/>
+                        <p:inputText value="#{ticketBean.nuevoTicket.asunto}" />
+                        <h:outputText value="Motivo:"/>
+                        <p:inputTextarea value="#{ticketBean.nuevoTicket.motivo}" />
+                        <h:outputText value="Prioridad:"/>
+                        <p:selectOneMenu value="#{ticketBean.nuevoTicket.prioridad}">
+                            <f:selectItems value="#{ticketBean.prioridades}" var="prio"
+                                           itemLabel="#{prio.label}" itemValue="#{prio}" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <p:commandButton value="Registrar" action="#{ticketBean.registrarTicketCliente}" update=":formTickets"/>
+                </h:form>
 
-    <h3>Tus Tickets Registrados</h3>
-    <h:form id="formTickets">
-        <p:dataTable value="#{ticketBean.ticketsCliente}" var="ticket" selection="#{ticketBean.ticketSeleccionado}" selectionMode="single" rowKey="#{ticket.idSolicitud}">
-            <p:column headerText="ID">
-                <h:outputText value="#{ticket.idSolicitud}" />
-            </p:column>
-            <p:column headerText="Tipo">
-                <h:outputText value="#{ticket.nombreTipoSolicitud}" />
-            </p:column>
-            <p:column headerText="Asunto">
-                <h:outputText value="#{ticket.asunto}" />
-            </p:column>
-            <p:column headerText="Estado">
-                <h:outputText value="#{ticket.estado.label}" />
-            </p:column>
-            <p:column headerText="Prioridad">
-                <h:outputText value="#{ticket.prioridad.label}" />
-            </p:column>
-            <p:column headerText="Fecha">
-                <h:outputText value="#{ticket.fechaCreacion}" />
-            </p:column>
-            <p:column>
-                <p:commandButton value="Editar" action="#{ticketBean.setTicketSeleccionado(ticket)}" oncomplete="PF('dlgEditTicket').show()" update=":formEditTicket"/>
-                <p:commandButton value="Cerrar" action="#{ticketBean.cerrarTicketCliente(ticket.idSolicitud)}" update="formTickets" rendered="#{ticket.estado == 'A'}"/>
-            </p:column>
-        </p:dataTable>
-    </h:form>
+                <h3>Tus Tickets Registrados</h3>
+                <h:form id="formTickets">
+                    <p:dataTable value="#{ticketBean.ticketsCliente}" var="ticket"
+                                 selection="#{ticketBean.ticketSeleccionado}"
+                                 selectionMode="single" rowKey="#{ticket.idSolicitud}">
+                        <p:column headerText="ID">
+                            <h:outputText value="#{ticket.idSolicitud}" />
+                        </p:column>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{ticket.nombreTipoSolicitud}" />
+                        </p:column>
+                        <p:column headerText="Asunto">
+                            <h:outputText value="#{ticket.asunto}" />
+                        </p:column>
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{ticket.estado.label}" />
+                        </p:column>
+                        <p:column headerText="Prioridad">
+                            <h:outputText value="#{ticket.prioridad.label}" />
+                        </p:column>
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{ticket.fechaCreacion}" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton value="Editar"
+                                             action="#{ticketBean.setTicketSeleccionado(ticket)}"
+                                             oncomplete="PF('dlgEditTicket').show()"
+                                             update=":formEditTicket"/>
+                            <p:commandButton value="Cerrar"
+                                             action="#{ticketBean.cerrarTicketCliente(ticket.idSolicitud)}"
+                                             update="formTickets"
+                                             rendered="#{ticket.estado == 'A'}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
 
-    <!-- Modal para editar ticket -->
-    <p:dialog header="Editar Ticket" widgetVar="dlgEditTicket" modal="true">
-        <h:form id="formEditTicket">
-            <h:panelGrid columns="2">
-                <h:outputText value="Asunto:"/>
-                <p:inputText value="#{ticketBean.ticketSeleccionado.asunto}" />
-                <h:outputText value="Motivo:"/>
-                <p:inputTextarea value="#{ticketBean.ticketSeleccionado.motivo}" />
-                <h:outputText value="Prioridad:"/>
-                <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.prioridad}">
-                    <f:selectItems value="#{ticketBean.prioridades}" var="prio"
-                                   itemLabel="#{prio.label}" itemValue="#{prio}" />
-                </p:selectOneMenu>
-            </h:panelGrid>
-            <p:commandButton value="Guardar Cambios" action="#{ticketBean.actualizarTicketCliente}" oncomplete="PF('dlgEditTicket').hide()" update=":formTickets"/>
-        </h:form>
-    </p:dialog>
-
-    <h:form>
-        <h:commandButton value="Cerrar Sesión" action="#{loginBean.logout}"/>
-    </h:form>
+                <!-- Modal para editar ticket -->
+                <p:dialog header="Editar Ticket" widgetVar="dlgEditTicket" modal="true">
+                    <h:form id="formEditTicket">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Asunto:"/>
+                            <p:inputText value="#{ticketBean.ticketSeleccionado.asunto}" />
+                            <h:outputText value="Motivo:"/>
+                            <p:inputTextarea value="#{ticketBean.ticketSeleccionado.motivo}" />
+                            <h:outputText value="Prioridad:"/>
+                            <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.prioridad}">
+                                <f:selectItems value="#{ticketBean.prioridades}" var="prio"
+                                               itemLabel="#{prio.label}" itemValue="#{prio}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar Cambios"
+                                         action="#{ticketBean.actualizarTicketCliente}"
+                                         oncomplete="PF('dlgEditTicket').hide()"
+                                         update=":formTickets"/>
+                    </h:form>
+                </p:dialog>
+            </main>
+        </div>
+    </div>
 </h:body>
 </html>

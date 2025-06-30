@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="jakarta.faces.facelets">
+    <div class="top-navbar">
+        <span class="logo">SISTEMA DE TICKETS</span>
+        <div class="navbar-user">
+            <span class="user-info">
+                <i class="pi pi-user"></i>
+                #{loginBean.nombreUsuario()}
+            </span>
+            <h:form style="display:inline;">
+                <p:commandButton icon="pi pi-sign-out" action="#{loginBean.logout}" title="Cerrar sesión"
+                    styleClass="logout-btn" />
+            </h:form>
+        </div>
+    </div>
+</ui:composition>

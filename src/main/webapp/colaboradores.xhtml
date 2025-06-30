@@ -2,83 +2,116 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="jakarta.faces.core">
-    <h:head>
-        <title>Colaboradores</title>
-    </h:head>
-    <h:body>
-        <h:form id="formRegistro">
-            <p:commandButton value="Volver" action="dashboardColaborador?faces-redirect=true"/>
-            <p:commandButton value="Gestionar Roles" action="roles?faces-redirect=true"/>
-            <h2>Registrar Colaborador</h2>
-            <h:panelGrid columns="2">
-                <h:outputText value="Nombre:"/>
-                <p:inputText value="#{colaboradorBean.nuevoColaborador.nombreColab}" />
-                <h:outputText value="Apellido:"/>
-                <p:inputText value="#{colaboradorBean.nuevoColaborador.apellidoColab}" />
-                <h:outputText value="Email:"/>
-                <p:inputText value="#{colaboradorBean.nuevoColaborador.emailColab}" />
-                <h:outputText value="Contraseña:"/>
-                <p:inputText value="#{colaboradorBean.nuevoColaborador.passwordColab}" />
-                <h:outputText value="Rol:"/>
-                <p:selectOneMenu value="#{colaboradorBean.nuevoColaborador.idRol}">
-                    <f:selectItems value="#{colaboradorBean.roles}" var="rol"
-                                   itemLabel="#{rol.nombreRol}" itemValue="#{rol.idRol}"/>
-                </p:selectOneMenu>
-            </h:panelGrid>
-            <p:commandButton value="Registrar" action="#{colaboradorBean.registrarColaborador}" update="formColaboradores"/>
-        </h:form>
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Colaboradores</title>
+    <!-- Importante: Tu CSS personalizado -->
+    <h:outputStylesheet library="css" name="custom.css"/>
+</h:head>
+<h:body>
+    <div class="layout">
+        <!-- Navbar reutilizable: barra superior compartida -->
+        <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
+        <div class="content-with-sidebar">
+            <!-- Sidebar reutilizable: menú lateral compartido -->
+            <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
+            <main class="main-content">
+                <!-- Botones superiores de navegación -->
+                <h:form>
+                    <p:commandButton value="Volver" action="dashboardColaborador?faces-redirect=true"/>
+                    <p:commandButton value="Gestionar Roles" action="roles?faces-redirect=true"/>
+                </h:form>
+                
+                <!-- Formulario de registro de colaborador -->
+                <h:form id="formRegistro">
+                    <h2>Registrar Colaborador</h2>
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Nombre:"/>
+                        <p:inputText value="#{colaboradorBean.nuevoColaborador.nombreColab}" />
+                        <h:outputText value="Apellido:"/>
+                        <p:inputText value="#{colaboradorBean.nuevoColaborador.apellidoColab}" />
+                        <h:outputText value="Email:"/>
+                        <p:inputText value="#{colaboradorBean.nuevoColaborador.emailColab}" />
+                        <h:outputText value="Contraseña:"/>
+                        <p:inputText value="#{colaboradorBean.nuevoColaborador.passwordColab}" />
+                        <h:outputText value="Rol:"/>
+                        <p:selectOneMenu value="#{colaboradorBean.nuevoColaborador.idRol}">
+                            <f:selectItems value="#{colaboradorBean.roles}" var="rol"
+                                           itemLabel="#{rol.nombreRol}" itemValue="#{rol.idRol}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                    <p:commandButton value="Registrar" 
+                                     action="#{colaboradorBean.registrarColaborador}" 
+                                     update="formColaboradores"/>
+                </h:form>
 
-        <h2>Lista de Colaboradores</h2>
-        <h:form id="formColaboradores">
-            <p:dataTable value="#{colaboradorBean.colaboradores}" var="colab" selection="#{colaboradorBean.colaboradorSeleccionado}" selectionMode="single" rowKey="#{colab.idColaborador}">
-                <p:column headerText="ID">
-                    <h:outputText value="#{colab.idColaborador}" />
-                </p:column>
-                <p:column headerText="Nombre">
-                    <h:outputText value="#{colab.nombreColab}" />
-                </p:column>
-                <p:column headerText="Apellido">
-                    <h:outputText value="#{colab.apellidoColab}" />
-                </p:column>
-                <p:column headerText="Email">
-                    <h:outputText value="#{colab.emailColab}" />
-                </p:column>
-                <p:column headerText="Rol">
-                    <h:outputText value="#{colaboradorBean.obtenerNombreRolPorId(colab.idRol)}" />
-                </p:column>
-                <p:column headerText="Estado">
-                    <h:outputText value="#{colab.estadoColab ? 'Activo' : 'Inactivo'}" />
-                </p:column>
-                <p:column>
-                    <p:commandButton value="Editar" action="#{colaboradorBean.seleccionarParaEditar(colab)}" oncomplete="PF('dlgEditar').show()" update=":formEditar"/>
-                    <p:commandButton value="#{colab.estadoColab ? 'Desactivar' : 'Activar'}" action="#{colaboradorBean.cambiarEstadoColaborador(colab)}" update=":formColaboradores"/>
-                </p:column>
-            </p:dataTable>
-        </h:form>
+                <!-- Tabla de colaboradores -->
+                <h2>Lista de Colaboradores</h2>
+                <h:form id="formColaboradores">
+                    <p:dataTable value="#{colaboradorBean.colaboradores}" var="colab"
+                                 selection="#{colaboradorBean.colaboradorSeleccionado}"
+                                 selectionMode="single" rowKey="#{colab.idColaborador}">
+                        <p:column headerText="ID">
+                            <h:outputText value="#{colab.idColaborador}" />
+                        </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{colab.nombreColab}" />
+                        </p:column>
+                        <p:column headerText="Apellido">
+                            <h:outputText value="#{colab.apellidoColab}" />
+                        </p:column>
+                        <p:column headerText="Email">
+                            <h:outputText value="#{colab.emailColab}" />
+                        </p:column>
+                        <p:column headerText="Rol">
+                            <h:outputText value="#{colaboradorBean.obtenerNombreRolPorId(colab.idRol)}" />
+                        </p:column>
+                        <p:column headerText="Estado">
+                            <h:outputText value="#{colab.estadoColab ? 'Activo' : 'Inactivo'}" />
+                        </p:column>
+                        <p:column>
+                            <!-- Botón para editar colaborador -->
+                            <p:commandButton value="Editar"
+                                             action="#{colaboradorBean.seleccionarParaEditar(colab)}"
+                                             oncomplete="PF('dlgEditar').show()" 
+                                             update=":formEditar"/>
+                            <!-- Botón para activar/desactivar colaborador -->
+                            <p:commandButton value="#{colab.estadoColab ? 'Desactivar' : 'Activar'}"
+                                             action="#{colaboradorBean.cambiarEstadoColaborador(colab)}"
+                                             update=":formColaboradores"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
 
-        <!-- Dialogo para editar -->
-        <p:dialog header="Editar Colaborador" widgetVar="dlgEditar" modal="true">
-            <h:form id="formEditar">
-                <h:panelGrid columns="2">
-                    <h:outputText value="Nombre:"/>
-                    <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.nombreColab}" />
-                    <h:outputText value="Apellido:"/>
-                    <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.apellidoColab}" />
-                    <h:outputText value="Email:"/>
-                    <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.emailColab}" />
-                    <h:outputText value="Contraseña:"/>
-                    <p:password value="#{colaboradorBean.colaboradorSeleccionado.passwordColab}" />
-                    <h:outputText value="Rol:"/>
-                    <p:selectOneMenu value="#{colaboradorBean.colaboradorSeleccionado.idRol}">
-                        <f:selectItems value="#{colaboradorBean.roles}" var="rol"
-                                       itemLabel="#{rol.nombreRol}" itemValue="#{rol.idRol}"/>
-                    </p:selectOneMenu>
-                    <h:outputText value="Estado:"/>
-                    <p:selectBooleanCheckbox value="#{colaboradorBean.colaboradorSeleccionado.estadoColab}" />
-                </h:panelGrid>
-                <p:commandButton value="Guardar" action="#{colaboradorBean.actualizarColaborador}" oncomplete="PF('dlgEditar').hide()" update=":formColaboradores"/>
-            </h:form>
-        </p:dialog>
-    </h:body>
+                <!-- Dialogo para editar colaborador -->
+                <p:dialog header="Editar Colaborador" widgetVar="dlgEditar" modal="true">
+                    <h:form id="formEditar">
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Nombre:"/>
+                            <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.nombreColab}" />
+                            <h:outputText value="Apellido:"/>
+                            <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.apellidoColab}" />
+                            <h:outputText value="Email:"/>
+                            <p:inputText value="#{colaboradorBean.colaboradorSeleccionado.emailColab}" />
+                            <h:outputText value="Contraseña:"/>
+                            <p:password value="#{colaboradorBean.colaboradorSeleccionado.passwordColab}" />
+                            <h:outputText value="Rol:"/>
+                            <p:selectOneMenu value="#{colaboradorBean.colaboradorSeleccionado.idRol}">
+                                <f:selectItems value="#{colaboradorBean.roles}" var="rol"
+                                               itemLabel="#{rol.nombreRol}" itemValue="#{rol.idRol}"/>
+                            </p:selectOneMenu>
+                            <h:outputText value="Estado:"/>
+                            <p:selectBooleanCheckbox value="#{colaboradorBean.colaboradorSeleccionado.estadoColab}" />
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar"
+                                         action="#{colaboradorBean.actualizarColaborador}"
+                                         oncomplete="PF('dlgEditar').hide()"
+                                         update=":formColaboradores"/>
+                    </h:form>
+                </p:dialog>
+            </main>
+        </div>
+    </div>
+</h:body>
 </html>

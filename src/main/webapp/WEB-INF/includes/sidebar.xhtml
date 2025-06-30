@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
+    <div class="side-bar">
+        <ul>
+            <li>
+                <!-- Redirige a la página correcta según el tipo de usuario (cliente o colaborador) -->
+                <a href="#{loginBean.tipoUsuario eq 'cliente' ? 'dashboardCliente.xhtml' : 'dashboardColaborador.xhtml'}">
+                    <i class="pi pi-home"></i> <span>Inicio</span>
+                </a>
+            </li>
+            <!-- El resto de opciones, puedes mostrar/ocultar según tipo si quieres -->
+            <li><a href="colaboradores.xhtml"><i class="pi pi-users"></i> <span>Colaboradores</span></a></li>
+            <li><a href="empresas.xhtml"><i class="pi pi-building"></i> <span>Empresas</span></a></li>
+            <li><a href="roles.xhtml"><i class="pi pi-id-card"></i> <span>Roles</span></a></li>
+            <li><a href="clientes.xhtml"><i class="pi pi-user-edit"></i> <span>Clientes</span></a></li>
+            <li><a href="aplicaciones.xhtml"><i class="pi pi-tablet"></i> <span>Aplicaciones</span></a></li>
+        </ul>
+    </div>
+</ui:composition>

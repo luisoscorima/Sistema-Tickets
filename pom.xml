@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>13.0.4</version>
+            <version>15.0.0</version>
             <classifier>jakarta</classifier>
         </dependency>
 
@@ -49,6 +49,14 @@
             <version>${jakartaee.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- PrimeFaces Theme -->
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces-themes</artifactId>
+            <version>15.0.0</version>
+        </dependency>
+        
     </dependencies>
 
     <build>

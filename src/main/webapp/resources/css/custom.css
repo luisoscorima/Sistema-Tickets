@@ -1,0 +1,274 @@
+:root {
+    --sidebar-bg: #3b4d60;
+    --sidebar-hover: #5c7290;
+    --navbar-bg: #ffffff;
+    --primary: #247cf2;
+    --success: #60c690;
+    --warning: #ffd778;
+    --danger: #fd9284;
+    --info: #6fd1e6;
+    --card-bg: #fff;
+    --content-bg: #f7fafd;
+    --border-radius: 16px;
+    --shadow: 0 2px 10px #1c20251a;
+    --font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--content-bg);
+    font-family: var(--font-family);
+    color: #3b4d60;
+}
+
+/* Navbar */
+.top-navbar {
+    width: 100vw;
+    height: 62px;
+    background: var(--navbar-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #233144;
+    font-size: 1.25rem;
+    padding: 0 38px;
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+
+.top-navbar .logo {
+    font-weight: bold;
+    font-size: 1.4rem;
+    letter-spacing: 1.2px;
+    color: var(--primary);
+}
+
+.top-navbar .navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 1.1rem;
+}
+.top-navbar .logout-btn {
+    background: var(--danger) !important;
+    border: none;
+    border-radius: 7px;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-left: 12px;
+    transition: filter 0.2s;
+}
+.top-navbar .logout-btn:hover {
+    filter: brightness(1.10);
+}
+
+/* Sidebar */
+.side-bar {
+    width: 92px;
+    background: var(--sidebar-bg);
+    color: #fff;
+    min-height: 100vh;
+    padding-top: 62px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 32px;
+}
+.side-bar li {
+    margin-bottom: 5px;
+}
+.side-bar a {
+    color: #e7edf5;
+    text-decoration: none;
+    font-size: 1.07rem;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    transition: background 0.18s, color 0.13s;
+    gap: 6px;
+    min-width: 60px;
+}
+.side-bar a span {
+    font-size: 0.93rem;
+    margin-top: 4px;
+    text-align: center;
+}
+.side-bar a:hover, .side-bar .active {
+    background: var(--sidebar-hover);
+    color: #fff;
+}
+
+.layout .content-with-sidebar {
+    display: flex;
+    margin-top: 62px;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    margin-left: 92px;
+    padding: 38px 36px 38px 36px;
+    min-height: calc(100vh - 62px);
+    background: var(--content-bg);
+}
+
+/* Cards (estadísticas, dashboard, paneles) */
+.card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    margin-bottom: 22px;
+    border: 1px solid #edf0f3;
+}
+.card-title {
+    font-size: 1.16rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: var(--primary);
+}
+.card-value {
+    font-size: 2.15rem;
+    font-weight: 700;
+    color: #233144;
+}
+.card-label {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+/* Table style */
+.ui-datatable, .ui-table {
+    background: var(--card-bg) !important;
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow);
+    border: 1px solid #edf0f3 !important;
+    margin-bottom: 22px;
+}
+.ui-datatable .ui-state-default {
+    background: #f7fafd !important;
+    color: #22324b !important;
+    border: none !important;
+    font-weight: 600;
+    font-size: 1.01rem;
+}
+.ui-datatable .ui-widget-content {
+    background: #fff !important;
+}
+.ui-datatable .ui-datatable-even {
+    background: #f9fbfe !important;
+}
+.ui-datatable .ui-datatable-odd {
+    background: #fff !important;
+}
+.ui-datatable td, .ui-datatable th {
+    padding: 16px 10px !important;
+    font-size: 1.01rem;
+    border: none;
+}
+.ui-datatable .ui-button {
+    border-radius: 7px !important;
+    padding: 7px 20px !important;
+    background: var(--primary) !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+.ui-datatable .ui-button:hover {
+    filter: brightness(1.07);
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 0.93rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    background: var(--info);
+    color: #22324b;
+}
+.badge-success { background: var(--success); color: #233144; }
+.badge-warning { background: var(--warning); color: #73510a; }
+.badge-danger { background: var(--danger); color: #fff; }
+.badge-primary { background: var(--primary); color: #fff; }
+
+/* Forms */
+.ui-inputtext, .ui-selectonemenu, .ui-inputtextarea {
+    border-radius: 7px !important;
+    border: 1.3px solid #dee5ef !important;
+    font-size: 1.04rem;
+    padding: 8px 10px;
+    background: #fafdff;
+    transition: box-shadow 0.18s;
+}
+.ui-inputtext:focus, .ui-selectonemenu:focus, .ui-inputtextarea:focus {
+    box-shadow: 0 0 0 2px var(--primary);
+    border-color: var(--primary);
+}
+.ui-button {
+    border-radius: 7px !important;
+    font-size: 1.06rem !important;
+    padding: 10px 22px !important;
+    font-weight: bold;
+    border: none;
+    box-shadow: 0 2px 8px #0001;
+    background: var(--primary) !important;
+    color: #fff !important;
+    transition: filter 0.18s;
+}
+.ui-button:hover {
+    filter: brightness(1.08);
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+    .side-bar {
+        width: 62px;
+        padding-top: 62px;
+    }
+    .side-bar a span { display: none; }
+    .main-content { margin-left: 62px; padding: 12px; }
+    .top-navbar { font-size: 1rem; padding: 0 8px; }
+}
+/* Ajustar tamaño de botones PrimeFaces */
+.ui-button, .ui-button.ui-widget, .p-button, button.ui-button {
+    font-size: 1rem !important;
+    padding: 6px 18px !important;
+    border-radius: 5px !important;
+    min-width: 80px !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+}
+
+.ui-button-text-only .ui-button-text {
+    padding: 0 !important;
+}
+
+.p-button, .ui-button {
+    line-height: 1.3 !important;
+}
+
+@media (max-width: 600px) {
+    .ui-button, .p-button {
+        font-size: 0.97rem !important;
+        padding: 6px 10px !important;
+        min-width: 60px !important;
+    }
+}
