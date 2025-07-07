@@ -9,5 +9,6 @@ public class ColaboradorDTO {
     private String emailColab;
     private String passwordColab;
     private Integer idRol;
+    private String nombreRol;
     private Boolean estadoColab;
 }

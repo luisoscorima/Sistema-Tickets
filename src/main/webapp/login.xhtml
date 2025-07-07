@@ -11,16 +11,11 @@
     <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
         <h:form style="min-width:350px;max-width:400px;padding:2rem 2.5rem;background:#fff;border-radius:12px;box-shadow:0 3px 18px #0003;">
             <h2 style="text-align:center;margin-bottom:2rem;color:#2753e6;">Iniciar Sesión</h2>
-            <h:panelGrid columns="2" columnClasses="ui-g-12 ui-md-4,ui-g-12 ui-md-8" style="width:100%; gap: 0.7rem;">
+            <h:panelGrid columns="2" style="width:100%; gap: 0.7rem;">
                 <h:outputText value="Correo:"/>
                 <p:inputText value="#{loginBean.email}" style="width:100%;" />
                 <h:outputText value="Contraseña:"/>
                 <p:password value="#{loginBean.password}" style="width:100%;" />
-                <h:outputText value="Tipo de Usuario:"/>
-                <p:selectOneMenu value="#{loginBean.tipoUsuario}" style="width:100%;">
-                    <f:selectItem itemLabel="Cliente" itemValue="cliente"/>
-                    <f:selectItem itemLabel="Colaborador" itemValue="colaborador"/>
-                </p:selectOneMenu>
             </h:panelGrid>
             <p:commandButton value="Ingresar" action="#{loginBean.login}" ajax="false"
                              style="width:100%; margin-top:2rem;" icon="pi pi-sign-in"/>

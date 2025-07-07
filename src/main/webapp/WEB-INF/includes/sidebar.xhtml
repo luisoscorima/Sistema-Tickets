@@ -3,18 +3,36 @@
                 xmlns:ui="jakarta.faces.facelets">
     <div class="side-bar">
         <ul>
+            <!-- Opción de inicio, según tipo de usuario -->
             <li>
-                <!-- Redirige a la página correcta según el tipo de usuario (cliente o colaborador) -->
-                <a href="#{loginBean.tipoUsuario eq 'cliente' ? 'dashboardCliente.xhtml' : 'dashboardColaborador.xhtml'}">
+                <a href="#{loginBean.esCliente() ? 'dashboardCliente.xhtml' : 'dashboardColaborador.xhtml'}">
                     <i class="pi pi-home"></i> <span>Inicio</span>
                 </a>
             </li>
-            <!-- El resto de opciones, puedes mostrar/ocultar según tipo si quieres -->
-            <li><a href="colaboradores.xhtml"><i class="pi pi-users"></i> <span>Colaboradores</span></a></li>
-            <li><a href="empresas.xhtml"><i class="pi pi-building"></i> <span>Empresas</span></a></li>
-            <li><a href="roles.xhtml"><i class="pi pi-id-card"></i> <span>Roles</span></a></li>
-            <li><a href="clientes.xhtml"><i class="pi pi-user-edit"></i> <span>Clientes</span></a></li>
-            <li><a href="aplicaciones.xhtml"><i class="pi pi-tablet"></i> <span>Aplicaciones</span></a></li>
+
+            <!-- Opciones SOLO para Administrador -->
+            <ui:fragment rendered="#{loginBean.esAdmin()}">
+                <li><a href="colaboradores.xhtml"><i class="pi pi-users"></i> <span>Colaboradores</span></a></li>
+                <li><a href="empresas.xhtml"><i class="pi pi-building"></i> <span>Empresas</span></a></li>
+                <li><a href="roles.xhtml"><i class="pi pi-id-card"></i> <span>Roles</span></a></li>
+                <li><a href="clientes.xhtml"><i class="pi pi-user-edit"></i> <span>Clientes</span></a></li>
+                <li><a href="aplicaciones.xhtml"><i class="pi pi-tablet"></i> <span>Aplicaciones</span></a></li>
+            </ui:fragment>
+
+            <!-- Opciones para Colaboradores (No admin, por ejemplo: Desarrollador, Diseñador, Coordinador) -->
+            <ui:fragment rendered="#{loginBean.esColaborador() and not loginBean.esAdmin()}">
+                <!-- Pon aquí las opciones de colaborador normal -->
+                <li><a href="dashboardColaborador.xhtml"><i class="pi pi-ticket"></i> <span>Tickets asignados</span></a></li>
+                <!-- Puedes agregar más según tus necesidades -->
+            </ui:fragment>
+
+            <!-- Opciones para Clientes -->
+            <ui:fragment rendered="#{loginBean.esCliente()}">
+                <li><a href="dashboardCliente.xhtml"><i class="pi pi-home"></i> <span>Mis Tickets</span></a></li>
+                <li><a href="aplicaciones.xhtml"><i class="pi pi-tablet"></i> <span>Aplicaciones</span></a></li>
+                <li><a href="clientes.xhtml"><i class="pi pi-user-edit"></i> <span>Clientes</span></a></li>
+                <!-- Más opciones de cliente -->
+            </ui:fragment>
         </ul>
     </div>
 </ui:composition>

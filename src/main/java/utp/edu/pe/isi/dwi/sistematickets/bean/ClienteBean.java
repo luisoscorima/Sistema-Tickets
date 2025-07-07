@@ -8,13 +8,32 @@ import utp.edu.pe.isi.dwi.sistematickets.dao.EmpresaDAO;
 import utp.edu.pe.isi.dwi.sistematickets.dto.EmpresaDTO;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 @Named("clienteBean")
 @SessionScoped
 public class ClienteBean implements Serializable {
+
+    @Inject
+    private LoginBean loginBean;
+
+    public void verificarAcceso() {
+        System.out.println("LoginBean: " + loginBean);
+        System.out.println("Es cliente: " + (loginBean != null && loginBean.esCliente()));
+
+        if (loginBean == null || !(loginBean.esCliente())) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
+                FacesContext.getCurrentInstance().responseComplete();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Inject
     private ClienteDAO clienteDAO;

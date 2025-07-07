@@ -23,7 +23,6 @@ public class LoginBean implements Serializable {
 
     private String email;
     private String password;
-    private String tipoUsuario = "cliente"; // o "colaborador"
 
     private ClienteDTO clienteLogueado;
     private ColaboradorDTO colaboradorLogueado;
@@ -31,18 +30,19 @@ public class LoginBean implements Serializable {
     public String login() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
 
-        if ("cliente".equals(tipoUsuario)) {
-            clienteLogueado = loginDAO.loginCliente(email, password);
-            if (clienteLogueado != null) {
-                return "dashboardCliente?faces-redirect=true";
-            }
-        } else {
-            colaboradorLogueado = loginDAO.loginColaborador(email, password);
-            if (colaboradorLogueado != null) {
-                return "dashboardColaborador?faces-redirect=true";
-            }
+        // 1. Intenta login como cliente
+        clienteLogueado = loginDAO.loginCliente(email, password);
+        if (clienteLogueado != null) {
+            return "dashboardCliente?faces-redirect=true";
         }
-        // Mensaje de error (lo puedes mostrar en la página)
+
+        // 2. Intenta login como colaborador
+        colaboradorLogueado = loginDAO.loginColaborador(email, password);
+        if (colaboradorLogueado != null) {
+            return "dashboardColaborador?faces-redirect=true";
+        }
+
+        // Ninguno autenticado
         facesContext.addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR,
                         "Correo o contraseña incorrectos", null));
@@ -54,7 +54,6 @@ public class LoginBean implements Serializable {
         colaboradorLogueado = null;
         email = null;
         password = null;
-        tipoUsuario = "cliente";
         return "login?faces-redirect=true";
     }
 
@@ -66,6 +65,25 @@ public class LoginBean implements Serializable {
             return clienteLogueado.getNombreCliente() + " " + clienteLogueado.getApellidoCliente();
         }
         return "Usuario";
+    }
+
+    public boolean esAdmin() {
+        if (colaboradorLogueado == null) {
+            System.out.println("NO LOGUEADO");
+            return false;
+        }
+        System.out.println("NOMBRE ROL: [" + colaboradorLogueado.getNombreRol() + "]");
+        return colaboradorLogueado.getNombreRol() != null
+                && colaboradorLogueado.getNombreRol().trim().equalsIgnoreCase("Administrador");
+    }
+
+    public boolean esColaborador() {
+        // Cualquier colaborador, admin o no
+        return colaboradorLogueado != null;
+    }
+
+    public boolean esCliente() {
+        return clienteLogueado != null;
     }
 
 }

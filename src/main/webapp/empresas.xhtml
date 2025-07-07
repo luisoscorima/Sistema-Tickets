@@ -4,111 +4,114 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets">
-<h:head>
-    <title>Empresas</title>
-    <h:outputStylesheet library="css" name="custom.css"/>
-</h:head>
-<h:body>
-    <div class="layout">
-        <!-- Navbar reutilizable -->
-        <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
-        <div class="content-with-sidebar">
-            <!-- Sidebar reutilizable -->
-            <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
-            <!-- Contenido principal -->
-            <main class="main-content">
-                <!-- Botones principales de navegación -->
-                <h:form>
-                    <p:commandButton value="Volver" action="dashboardColaborador?faces-redirect=true"/>
-                    <p:commandButton value="Gestionar Clientes" action="clientes?faces-redirect=true"/>
-                    <p:commandButton value="Gestionar Aplicaciones" action="aplicaciones?faces-redirect=true"/>
-                </h:form>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{empresaBean.verificarAcceso}" />
+    </f:metadata>
+    <h:head>
+        <title>Empresas</title>
+        <h:outputStylesheet library="css" name="custom.css"/>
+    </h:head>
+    <h:body>
+        <div class="layout">
+            <!-- Navbar reutilizable -->
+            <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
+            <div class="content-with-sidebar">
+                <!-- Sidebar reutilizable -->
+                <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
+                <!-- Contenido principal -->
+                <main class="main-content">
+                    <!-- Botones principales de navegación -->
+                    <h:form>
+                        <p:commandButton value="Volver" action="dashboardColaborador?faces-redirect=true"/>
+                        <p:commandButton value="Gestionar Clientes" action="clientes?faces-redirect=true"/>
+                        <p:commandButton value="Gestionar Aplicaciones" action="aplicaciones?faces-redirect=true"/>
+                    </h:form>
 
-                <!-- Registro de Empresa -->
-                <h:form id="formRegistroEmpresa">
-                    <h2>Registrar Empresa</h2>
-                    <h:panelGrid columns="2">
-                        <h:outputText value="RUC:"/>
-                        <p:inputText value="#{empresaBean.nuevaEmpresa.ruc}" />
-                        <h:outputText value="Razón Social:"/>
-                        <p:inputText value="#{empresaBean.nuevaEmpresa.razonSocial}" />
-                        <h:outputText value="Dirección:"/>
-                        <p:inputText value="#{empresaBean.nuevaEmpresa.direccion}" />
-                        <h:outputText value="Teléfono:"/>
-                        <p:inputText value="#{empresaBean.nuevaEmpresa.telefono}" />
-                        <h:outputText value="Estado:"/>
-                        <p:selectOneMenu value="#{empresaBean.nuevaEmpresa.estadoEmpresa}">
-                            <f:selectItems value="#{empresaBean.estados}" var="est"
-                                           itemLabel="#{est.label}" itemValue="#{est}" />
-                        </p:selectOneMenu>
-                    </h:panelGrid>
-                    <p:commandButton value="Registrar"
-                                     action="#{empresaBean.registrarEmpresa}"
-                                     update="formEmpresas"/>
-                </h:form>
-
-                <!-- Tabla de Empresas -->
-                <h2>Lista de Empresas</h2>
-                <h:form id="formEmpresas">
-                    <p:dataTable value="#{empresaBean.empresas}" var="emp"
-                                 selection="#{empresaBean.empresaSeleccionada}"
-                                 selectionMode="single" rowKey="#{emp.idEmpresa}">
-                        <p:column headerText="ID">
-                            <h:outputText value="#{emp.idEmpresa}" />
-                        </p:column>
-                        <p:column headerText="RUC">
-                            <h:outputText value="#{emp.ruc}" />
-                        </p:column>
-                        <p:column headerText="Razón Social">
-                            <h:outputText value="#{emp.razonSocial}" />
-                        </p:column>
-                        <p:column headerText="Dirección">
-                            <h:outputText value="#{emp.direccion}" />
-                        </p:column>
-                        <p:column headerText="Teléfono">
-                            <h:outputText value="#{emp.telefono}" />
-                        </p:column>
-                        <p:column headerText="Estado">
-                            <h:outputText value="#{emp.estadoEmpresa.label}" />
-                        </p:column>
-                        <p:column>
-                            <p:commandButton value="Editar"
-                                             action="#{empresaBean.seleccionarParaEditar(emp)}"
-                                             oncomplete="PF('dlgEditarEmpresa').show()"
-                                             update=":formEditarEmpresa"/>
-                            <p:commandButton value="#{emp.estadoEmpresa == 'A' ? 'Desactivar' : 'Activar'}"
-                                             action="#{empresaBean.cambiarEstadoEmpresa(emp)}"
-                                             update="formEmpresas"/>
-                        </p:column>
-                    </p:dataTable>
-                </h:form>
-
-                <!-- Diálogo para editar empresa -->
-                <p:dialog header="Editar Empresa" widgetVar="dlgEditarEmpresa" modal="true">
-                    <h:form id="formEditarEmpresa">
+                    <!-- Registro de Empresa -->
+                    <h:form id="formRegistroEmpresa">
+                        <h2>Registrar Empresa</h2>
                         <h:panelGrid columns="2">
                             <h:outputText value="RUC:"/>
-                            <p:inputText value="#{empresaBean.empresaSeleccionada.ruc}" />
+                            <p:inputText value="#{empresaBean.nuevaEmpresa.ruc}" />
                             <h:outputText value="Razón Social:"/>
-                            <p:inputText value="#{empresaBean.empresaSeleccionada.razonSocial}" />
+                            <p:inputText value="#{empresaBean.nuevaEmpresa.razonSocial}" />
                             <h:outputText value="Dirección:"/>
-                            <p:inputText value="#{empresaBean.empresaSeleccionada.direccion}" />
+                            <p:inputText value="#{empresaBean.nuevaEmpresa.direccion}" />
                             <h:outputText value="Teléfono:"/>
-                            <p:inputText value="#{empresaBean.empresaSeleccionada.telefono}" />
+                            <p:inputText value="#{empresaBean.nuevaEmpresa.telefono}" />
                             <h:outputText value="Estado:"/>
-                            <p:selectOneMenu value="#{empresaBean.empresaSeleccionada.estadoEmpresa}">
+                            <p:selectOneMenu value="#{empresaBean.nuevaEmpresa.estadoEmpresa}">
                                 <f:selectItems value="#{empresaBean.estados}" var="est"
                                                itemLabel="#{est.label}" itemValue="#{est}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
-                        <p:commandButton value="Guardar"
-                                         action="#{empresaBean.actualizarEmpresa}"
-                                         oncomplete="PF('dlgEditarEmpresa').hide()"
-                                         update=":formEmpresas"/>
+                        <p:commandButton value="Registrar"
+                                         action="#{empresaBean.registrarEmpresa}"
+                                         update="formEmpresas"/>
                     </h:form>
-                </p:dialog>
-            </main>
+
+                    <!-- Tabla de Empresas -->
+                    <h2>Lista de Empresas</h2>
+                    <h:form id="formEmpresas">
+                        <p:dataTable value="#{empresaBean.empresas}" var="emp"
+                                     selection="#{empresaBean.empresaSeleccionada}"
+                                     selectionMode="single" rowKey="#{emp.idEmpresa}">
+                            <p:column headerText="ID">
+                                <h:outputText value="#{emp.idEmpresa}" />
+                            </p:column>
+                            <p:column headerText="RUC">
+                                <h:outputText value="#{emp.ruc}" />
+                            </p:column>
+                            <p:column headerText="Razón Social">
+                                <h:outputText value="#{emp.razonSocial}" />
+                            </p:column>
+                            <p:column headerText="Dirección">
+                                <h:outputText value="#{emp.direccion}" />
+                            </p:column>
+                            <p:column headerText="Teléfono">
+                                <h:outputText value="#{emp.telefono}" />
+                            </p:column>
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{emp.estadoEmpresa.label}" />
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Editar"
+                                                 action="#{empresaBean.seleccionarParaEditar(emp)}"
+                                                 oncomplete="PF('dlgEditarEmpresa').show()"
+                                                 update=":formEditarEmpresa"/>
+                                <p:commandButton value="#{emp.estadoEmpresa == 'A' ? 'Desactivar' : 'Activar'}"
+                                                 action="#{empresaBean.cambiarEstadoEmpresa(emp)}"
+                                                 update="formEmpresas"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+
+                    <!-- Diálogo para editar empresa -->
+                    <p:dialog header="Editar Empresa" widgetVar="dlgEditarEmpresa" modal="true">
+                        <h:form id="formEditarEmpresa">
+                            <h:panelGrid columns="2">
+                                <h:outputText value="RUC:"/>
+                                <p:inputText value="#{empresaBean.empresaSeleccionada.ruc}" />
+                                <h:outputText value="Razón Social:"/>
+                                <p:inputText value="#{empresaBean.empresaSeleccionada.razonSocial}" />
+                                <h:outputText value="Dirección:"/>
+                                <p:inputText value="#{empresaBean.empresaSeleccionada.direccion}" />
+                                <h:outputText value="Teléfono:"/>
+                                <p:inputText value="#{empresaBean.empresaSeleccionada.telefono}" />
+                                <h:outputText value="Estado:"/>
+                                <p:selectOneMenu value="#{empresaBean.empresaSeleccionada.estadoEmpresa}">
+                                    <f:selectItems value="#{empresaBean.estados}" var="est"
+                                                   itemLabel="#{est.label}" itemValue="#{est}" />
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton value="Guardar"
+                                             action="#{empresaBean.actualizarEmpresa}"
+                                             oncomplete="PF('dlgEditarEmpresa').hide()"
+                                             update=":formEmpresas"/>
+                        </h:form>
+                    </p:dialog>
+                </main>
+            </div>
         </div>
-    </div>
-</h:body>
+    </h:body>
 </html>

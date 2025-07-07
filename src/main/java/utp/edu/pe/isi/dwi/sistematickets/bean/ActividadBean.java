@@ -1,10 +1,13 @@
 package utp.edu.pe.isi.dwi.sistematickets.bean;
 
+import jakarta.annotation.PostConstruct;
 import utp.edu.pe.isi.dwi.sistematickets.dao.ActividadDAO;
 import utp.edu.pe.isi.dwi.sistematickets.dto.ActividadDTO;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import utp.edu.pe.isi.dwi.sistematickets.dao.AsignacionDAO;
@@ -14,6 +17,19 @@ import utp.edu.pe.isi.dwi.sistematickets.enums.EstadoSolicitudEnum;
 @Named("actividadBean")
 @SessionScoped
 public class ActividadBean implements Serializable {
+
+    public void verificarAcceso() {
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        LoginBean loginBean = (LoginBean) ctx.getExternalContext().getSessionMap().get("loginBean");
+        if (loginBean == null || !loginBean.esColaborador()) {
+            try {
+                ctx.getExternalContext().redirect("login.xhtml");
+                ctx.responseComplete(); // <--- ¡Esto es importante!
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Inject
     private ActividadDAO actividadDAO;

@@ -4,7 +4,9 @@ import utp.edu.pe.isi.dwi.sistematickets.dao.EmpresaDAO;
 import utp.edu.pe.isi.dwi.sistematickets.dto.EmpresaDTO;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import utp.edu.pe.isi.dwi.sistematickets.enums.EstadoEnum;
@@ -12,6 +14,23 @@ import utp.edu.pe.isi.dwi.sistematickets.enums.EstadoEnum;
 @Named("empresaBean")
 @SessionScoped
 public class EmpresaBean implements Serializable {
+
+    @Inject
+    private LoginBean loginBean;
+
+    public void verificarAcceso() {
+        System.out.println("LoginBean: " + loginBean);
+        System.out.println("Es admin: " + (loginBean != null && loginBean.esAdmin()));
+
+        if (loginBean == null || !(loginBean.esAdmin())) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
+                FacesContext.getCurrentInstance().responseComplete();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Inject
     private EmpresaDAO empresaDAO;
