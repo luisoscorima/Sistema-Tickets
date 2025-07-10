@@ -2,16 +2,37 @@
                 xmlns:h="jakarta.faces.html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="jakarta.faces.facelets">
+    <style>
+        .top-navbar{
+            display:flex;justify-content:space-between;align-items:center;
+            background:#fff;padding:.6rem 1.4rem;border-bottom:1px solid #e5e5e5;
+        }
+        .navbar-user{display:flex;align-items:center;gap:.8rem;font-size:.95rem}
+        .username   {font-weight:600}
+    </style>
+
     <div class="top-navbar">
         <span class="logo">SISTEMA DE TICKETS</span>
+
         <div class="navbar-user">
-            <span class="user-info">
-                <i class="pi pi-user"></i>
-                #{loginBean.nombreUsuario()}
-            </span>
-            <h:form style="display:inline;">
-                <p:commandButton icon="pi pi-sign-out" action="#{loginBean.logout}" title="Cerrar sesión"
-                    styleClass="logout-btn" />
+            <!-- Avatar con iniciales -->
+            <p:avatar label="#{loginBean.nombreUsuario().substring(0,1)}"
+                      shape="circle" styleClass="mr-2"/>
+
+            <!-- Nombre -->
+            <span class="username">#{loginBean.nombreUsuario()}</span>
+
+            <!-- Rol como chip -->
+            <p:chip icon="#{loginBean.iconoRol()}"
+                    label="#{loginBean.rolUsuario()}"
+                    styleClass="p-chip-sm" />
+
+            <!-- Logout -->
+            <h:form>
+                <p:commandButton icon="pi pi-sign-out"
+                                 action="#{loginBean.logout}"
+                                 title="Cerrar sesión"
+                                 styleClass="logout-btn" />
             </h:form>
         </div>
     </div>

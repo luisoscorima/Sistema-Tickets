@@ -4,22 +4,35 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="jakarta.faces.core">
 <h:head>
-    <title>Login</title>
+    <title>Login | Sistema de Tickets</title>
     <h:outputStylesheet library="css" name="custom.css"/>
 </h:head>
-<h:body style="background: #f6f8fa;">
+<h:body class="body-login">
     <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
-        <h:form style="min-width:350px;max-width:400px;padding:2rem 2.5rem;background:#fff;border-radius:12px;box-shadow:0 3px 18px #0003;">
-            <h2 style="text-align:center;margin-bottom:2rem;color:#2753e6;">Iniciar Sesión</h2>
-            <h:panelGrid columns="2" style="width:100%; gap: 0.7rem;">
-                <h:outputText value="Correo:"/>
-                <p:inputText value="#{loginBean.email}" style="width:100%;" />
-                <h:outputText value="Contraseña:"/>
-                <p:password value="#{loginBean.password}" style="width:100%;" />
+        <h:form styleClass="login-card">
+            <div class="brand">
+<!--                <img src="logo.png" alt="sistema-tickets-logo"/>-->
+                <h2>Sistema de Tickets</h2>
+                <span style="font-size:13px;color:#aaa;">Acceso Seguro</span>
+            </div>
+            <p:messages id="loginMsgs" showDetail="true" closable="true" />
+            <h:panelGrid columns="1" style="width:100%; gap:1.1rem; margin-bottom:2rem;">
+                <p:inputText value="#{loginBean.email}" placeholder="Correo electrónico"
+                             style="width:100%;" required="true" requiredMessage="El correo es obligatorio"/>
+                <p:password value="#{loginBean.password}" placeholder="Contraseña"
+                            style="width:100%;" required="true" requiredMessage="La contraseña es obligatoria"/>
             </h:panelGrid>
-            <p:commandButton value="Ingresar" action="#{loginBean.login}" ajax="false"
-                             style="width:100%; margin-top:2rem;" icon="pi pi-sign-in"/>
-            <h:messages/>
+            <p:commandButton value="Ingresar"
+                             action="#{loginBean.login}"
+                             style="width:100%; font-size:1.09rem;" icon="pi pi-sign-in"
+                             ajax="false"/>
+            <div style="margin-top:2.5rem;font-size:13px;color:#7e869d;">
+                <b>Usuarios de prueba:</b><br/>
+                <span>admin@demo.com / 123456</span><br/>
+                <span>colaborador1@demo.com / 123456</span><br/>
+                <span>colaborador2@demo.com / 123456</span><br/>
+                <span>cliente@demo.com / 123456</span>
+            </div>
         </h:form>
     </div>
 </h:body>

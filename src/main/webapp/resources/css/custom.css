@@ -204,10 +204,22 @@ body, html {
     background: var(--info);
     color: #22324b;
 }
-.badge-success { background: var(--success); color: #233144; }
-.badge-warning { background: var(--warning); color: #73510a; }
-.badge-danger { background: var(--danger); color: #fff; }
-.badge-primary { background: var(--primary); color: #fff; }
+.badge-success {
+    background: var(--success);
+    color: #233144;
+}
+.badge-warning {
+    background: var(--warning);
+    color: #73510a;
+}
+.badge-danger {
+    background: var(--danger);
+    color: #fff;
+}
+.badge-primary {
+    background: var(--primary);
+    color: #fff;
+}
 
 /* Forms */
 .ui-inputtext, .ui-selectonemenu, .ui-inputtextarea {
@@ -243,9 +255,17 @@ body, html {
         width: 62px;
         padding-top: 62px;
     }
-    .side-bar a span { display: none; }
-    .main-content { margin-left: 62px; padding: 12px; }
-    .top-navbar { font-size: 1rem; padding: 0 8px; }
+    .side-bar a span {
+        display: none;
+    }
+    .main-content {
+        margin-left: 62px;
+        padding: 12px;
+    }
+    .top-navbar {
+        font-size: 1rem;
+        padding: 0 8px;
+    }
 }
 /* Ajustar tamaño de botones PrimeFaces */
 .ui-button, .ui-button.ui-widget, .p-button, button.ui-button {
@@ -271,4 +291,83 @@ body, html {
         padding: 6px 10px !important;
         min-width: 60px !important;
     }
+}
+
+.body-login {
+    background: #f6f8fa;
+}
+.login-card {
+    min-width: 340px;
+    max-width: 410px;
+    padding: 2rem 2.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 3px 18px #0002;
+}
+.brand {
+    text-align: center;
+    margin-bottom: 1.7rem;
+}
+.brand img {
+    width: 70px;
+}
+.brand h2 {
+    margin: 0.4em 0 0.1em 0;
+    color: #2753e6;
+    font-weight: 700;
+}
+.kanban-board {
+    display: flex;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+.kanban-column {
+    background: #f8fafd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #0001;
+    min-width: 260px;
+    padding: 0.5rem 1rem 1rem 1rem;
+    flex: 1 0 260px;
+}
+.kanban-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 1rem 0 1rem 0;
+    color: #214aad;
+}
+.kanban-card {
+    background: #fff;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    box-shadow: 0 1px 6px #0002;
+}
+.kanban-card b { color: #0b1e4d; }
+.kanban-card .estado { font-size: 0.9rem; color: #7c8ba1;}
+/* ===== KPI ===== */
+.kpi-cards{
+    display:flex;
+    flex-wrap:wrap;          /* Salta a segunda fila si no cabe */
+    gap:1rem;
+    margin:1.8rem 0 1.2rem 0;
+}
+.kpi-card{
+    background:#fff;
+    border-radius:8px;
+    box-shadow:0 2px 8px #0002;
+    padding:1rem 1.25rem;
+    min-width:140px;
+    text-align:center;
+}
+.kpi-label{
+    display:block;
+    font-size:.85rem;
+    color:#7c8ba1;
+    margin-bottom:.25rem;
+}
+.kpi-value{
+    font-size:1.8rem;
+    font-weight:700;
+    color:#233144;
 }

@@ -27,58 +27,46 @@ public class LoginBean implements Serializable {
     private ClienteDTO clienteLogueado;
     private ColaboradorDTO colaboradorLogueado;
 
+    /* ---------- LOGIN ---------- */
     public String login() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
+        FacesContext ctx = FacesContext.getCurrentInstance();
 
-        // 1. Intenta login como cliente
+        // 1) Cliente
         clienteLogueado = loginDAO.loginCliente(email, password);
         if (clienteLogueado != null) {
             return "dashboardCliente?faces-redirect=true";
         }
 
-        // 2. Intenta login como colaborador
+        // 2) Colaborador (o Admin)
         colaboradorLogueado = loginDAO.loginColaborador(email, password);
         if (colaboradorLogueado != null) {
-            return "dashboardColaborador?faces-redirect=true";
+            return esAdmin()
+                    ? "dashboardAdmin?faces-redirect=true"
+                    : "dashboardColaborador?faces-redirect=true";
         }
 
-        // Ninguno autenticado
-        facesContext.addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Correo o contraseña incorrectos", null));
+        // 3) Fallo
+        ctx.addMessage(null, new FacesMessage(
+                FacesMessage.SEVERITY_ERROR,
+                "Correo o contraseña incorrectos", null));
         return null;
     }
 
+    /* ---------- LOGOUT ---------- */
     public String logout() {
         clienteLogueado = null;
         colaboradorLogueado = null;
-        email = null;
-        password = null;
+        email = password = null;
         return "login?faces-redirect=true";
     }
 
-    public String nombreUsuario() {
-        if (colaboradorLogueado != null) {
-            return colaboradorLogueado.getNombreColab() + " " + colaboradorLogueado.getApellidoColab();
-        }
-        if (clienteLogueado != null) {
-            return clienteLogueado.getNombreCliente() + " " + clienteLogueado.getApellidoCliente();
-        }
-        return "Usuario";
-    }
-
+    /* ---------- HELPERS ---------- */
     public boolean esAdmin() {
-        if (colaboradorLogueado == null) {
-            System.out.println("NO LOGUEADO");
-            return false;
-        }
-        System.out.println("NOMBRE ROL: [" + colaboradorLogueado.getNombreRol() + "]");
-        return colaboradorLogueado.getNombreRol() != null
-                && colaboradorLogueado.getNombreRol().trim().equalsIgnoreCase("Administrador");
+        return colaboradorLogueado != null
+                && "Administrador".equalsIgnoreCase(colaboradorLogueado.getNombreRol());
     }
 
     public boolean esColaborador() {
-        // Cualquier colaborador, admin o no
         return colaboradorLogueado != null;
     }
 
@@ -86,4 +74,50 @@ public class LoginBean implements Serializable {
         return clienteLogueado != null;
     }
 
+    public String rutaInicio() {
+        if (esAdmin()) {
+            return "dashboardAdmin.xhtml";
+        } else if (esColaborador()) {
+            return "dashboardColaborador.xhtml";
+        } else if (esCliente()) {
+            return "dashboardCliente.xhtml";
+        }
+        return "login.xhtml";
+    }
+
+    public String nombreUsuario() {
+        if (esColaborador()) {
+            return colaboradorLogueado.getNombreColab() + ' ' + colaboradorLogueado.getApellidoColab();
+        }
+        if (esCliente()) {
+            return clienteLogueado.getNombreCliente() + ' ' + clienteLogueado.getApellidoCliente();
+        }
+        return "Usuario";
+    }
+
+    public String rolUsuario() {
+        if (esAdmin()) {
+            return "Admin";
+        }
+        if (esColaborador()) {
+            return "Colaborador";
+        }
+        if (esCliente()) {
+            return "Cliente";
+        }
+        return "";
+    }
+
+    public String iconoRol() {
+        if (esAdmin()) {
+            return "pi pi-shield";      // 🔰
+        }
+        if (esColaborador()) {
+            return "pi pi-briefcase";   // 💼
+        }
+        if (esCliente()) {
+            return "pi pi-user";        // 👤
+        }
+        return "pi pi-question";
+    }
 }
