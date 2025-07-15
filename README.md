@@ -11,7 +11,7 @@ Sistema web para la gestión de solicitudes de soporte técnico, registro de act
 ## Índice
 
 - [Descripción general](https://chatgpt.com/?temporary-chat=true#descripci%C3%B3n-general)
-- [Modelo de Datos](https://chatgpt.com/?temporary-chat=true#modelo-de-datos)
+- [Modelo de Datos](#modelo-de-datos)
 - [Estructura del Proyecto](https://chatgpt.com/?temporary-chat=true#estructura-del-proyecto)
 - [Configuración y despliegue](https://chatgpt.com/?temporary-chat=true#configuraci%C3%B3n-y-despliegue)
 - [Detalles de la implementación](https://chatgpt.com/?temporary-chat=true#detalles-de-la-implementaci%C3%B3n)
