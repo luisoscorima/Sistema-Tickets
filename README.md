@@ -10,21 +10,21 @@ Sistema web para la gestión de solicitudes de soporte técnico, registro de act
 
 ## Índice
 
-- [Descripción general](https://chatgpt.com/?temporary-chat=true#descripci%C3%B3n-general)
+- [Descripción general](#descripci%C3%B3n-general)
 - [Modelo de Datos](#modelo-de-datos)
-- [Estructura del Proyecto](https://chatgpt.com/?temporary-chat=true#estructura-del-proyecto)
-- [Configuración y despliegue](https://chatgpt.com/?temporary-chat=true#configuraci%C3%B3n-y-despliegue)
-- [Detalles de la implementación](https://chatgpt.com/?temporary-chat=true#detalles-de-la-implementaci%C3%B3n)
-    - [DTOs](https://chatgpt.com/?temporary-chat=true#dtos)
-    - [DAOs](https://chatgpt.com/?temporary-chat=true#daos)
-    - [Beans](https://chatgpt.com/?temporary-chat=true#beans)
-    - [Frontend (JSF + PrimeFaces)](https://chatgpt.com/?temporary-chat=true#frontend-jsf--primefaces)
-    - [Control de estados y permisos](https://chatgpt.com/?temporary-chat=true#control-de-estados-y-permisos)
-- [Flujos de usuario](https://chatgpt.com/?temporary-chat=true#flujos-de-usuario)
-- [Capturas de pantalla (opcional)](https://chatgpt.com/?temporary-chat=true#capturas-de-pantalla-opcional)
-- [Consideraciones técnicas y buenas prácticas](https://chatgpt.com/?temporary-chat=true#consideraciones-t%C3%A9cnicas-y-buenas-pr%C3%A1cticas)
-- [Posibles mejoras](https://chatgpt.com/?temporary-chat=true#posibles-mejoras)
-- [Autores y agradecimientos](https://chatgpt.com/?temporary-chat=true#autores-y-agradecimientos)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Configuración y despliegue](#configuraci%C3%B3n-y-despliegue)
+- [Detalles de la implementación](#detalles-de-la-implementaci%C3%B3n)
+    - [DTOs](#dtos)
+    - [DAOs](#daos)
+    - [Beans](#beans)
+    - [Frontend (JSF + PrimeFaces)](#frontend-jsf--primefaces)
+    - [Control de estados y permisos](#control-de-estados-y-permisos)
+- [Flujos de usuario](#flujos-de-usuario)
+- [Capturas de pantalla](#capturas-de-pantalla-opcional)
+- [Consideraciones técnicas y buenas prácticas](#consideraciones-t%C3%A9cnicas-y-buenas-pr%C3%A1cticas)
+- [Posibles mejoras](#posibles-mejoras)
+- [Autores y agradecimientos](#autores-y-agradecimientos)
 
 ---
 
