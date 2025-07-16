@@ -2,7 +2,9 @@
 
 ---
 
+Presione abajo para Probar el prototipo:
 [![Probar DEMO](https://img.shields.io/badge/Probar%20DEMO-%F0%9F%94%8D-green)](https://tickets.creart.tech/)
+Si no es posible, visite: [https://tickets.creart.tech](https://tickets.creart.tech)
 
 ---
 
