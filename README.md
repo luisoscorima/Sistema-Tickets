@@ -2,7 +2,7 @@
 
 ---
 
-[![Probar la DEMO](https://ps.w.org/wpstream/assets/icon-256x256.png?rev=2872115)](https://tickets.creart.tech)
+[![Probar la DEMO](https://media.ceros.com/bizzdesign/images/2025/02/05/ebc5ea33db73a5946477069b663c54f9/white-play-button-2.png)](https://tickets.creart.tech)
 
 ---
 
