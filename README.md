@@ -329,9 +329,16 @@ public class ActividadBean implements Serializable {
 
 ## Autores y agradecimientos
 
-- **Desarrollador:** Luis Gustavo Oscorima
 - **Universidad:** Universidad Tecnológica del Perú
 - **Docente:** Omar Wilton Saavedra Salazar
-- **Agradecimientos:** A compañeros y tutores que colaboraron en el desarrollo y pruebas.
+- **Curso:** Desarrollo Web Integrado
+- **Líder de Desarrollo:** Luis Gustavo Oscorima
+- **Integrantes:** 
+Oscorima Palomino, Luis Gustavo - U21313503
+Palacios Mendoza Lucerito - U1601142
+Villanueva Vasquez, Diego Alejandro - U18208860
+Zinanyuca Clemente, Marcio Adriell - U22218661
+
+- **Agradecimientos:** Al Docente por su paciencia y a mis compañeros por el apoyo en el desarrollo.
 
 ---
