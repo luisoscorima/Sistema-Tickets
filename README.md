@@ -124,7 +124,7 @@ src/
 
 ### Configuración de Base de Datos
 
-1. Crear los tipos ENUM y tablas siguiendo el [modelo de datos](https://chatgpt.com/?temporary-chat=true#modelo-de-datos).
+1. Crear los tipos ENUM y tablas siguiendo el [modelo de datos](#modelo-de-datos).
 2. Configurar las credenciales de la base de datos en los DAOs (o mejor: usar un datasource configurado en TomEE).
 
 ### Despliegue
