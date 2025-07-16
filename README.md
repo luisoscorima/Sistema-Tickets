@@ -42,6 +42,8 @@ Este sistema permite:
 
 ## Modelo de Datos
 
+![Diagrama_ER](Diagrama_ER_sistemaTickets.svg)
+
 ### Esquema de tablas principales
 
 - **Empresa**: Información de la empresa cliente.
