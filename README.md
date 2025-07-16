@@ -43,6 +43,7 @@ Este sistema permite:
 ## Modelo de Datos
 
 ### Diagrama Entidad Relación
+![Diagrama_ER](Diagrama_ER_sistemaTickets.svg)
 
 ### Esquema de tablas principales
 
