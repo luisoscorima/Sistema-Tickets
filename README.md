@@ -2,7 +2,7 @@
 
 ---
 
-[![Probar la DEMO](https://media.ceros.com/bizzdesign/images/2025/02/05/ebc5ea33db73a5946477069b663c54f9/white-play-button-2.png)](https://tickets.creart.tech)
+![Static Badge](https://img.shields.io/badge/Probar%20Demo-text?style=plastic&link=https%3A%2F%2Ftickets.creart.tech%2F)
 
 ---
 
