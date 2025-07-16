@@ -2,7 +2,7 @@
 
 ---
 
-[![Badge](https://img.shields.io/badge/Texto-Botón-Color)](https://tickets.creart.tech/)
+[![Static Badge](https://img.shields.io/badge/Probar-Demo-Color)](https://tickets.creart.tech/)
 
 ---
 
