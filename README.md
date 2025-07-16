@@ -334,10 +334,10 @@ public class ActividadBean implements Serializable {
 - **Curso:** Desarrollo Web Integrado
 - **Líder de Desarrollo:** Luis Gustavo Oscorima
 - **Integrantes:** 
-Oscorima Palomino, Luis Gustavo - U21313503
-Palacios Mendoza Lucerito - U1601142
-Villanueva Vasquez, Diego Alejandro - U18208860
-Zinanyuca Clemente, Marcio Adriell - U22218661
+    - Oscorima Palomino, Luis Gustavo U21313503
+    - Palacios Mendoza Lucerito U1601142
+    - Villanueva Vasquez, Diego Alejandro U18208860
+    - Zinanyuca Clemente, Marcio Adriell U22218661
 
 - **Agradecimientos:** Al Docente por su paciencia y a mis compañeros por el apoyo en el desarrollo.
 
