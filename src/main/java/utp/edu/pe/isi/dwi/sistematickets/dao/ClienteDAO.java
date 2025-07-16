@@ -26,9 +26,7 @@ public class ClienteDAO {
     public List<ClienteDTO> listarClientes() {
         List<ClienteDTO> lista = new ArrayList<>();
         String sql = "SELECT * FROM Cliente ORDER BY id_cliente ASC";
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ClienteDTO c = new ClienteDTO();
                 c.setIdCliente(rs.getInt("id_cliente"));
@@ -49,8 +47,7 @@ public class ClienteDAO {
 
     public void registrarCliente(ClienteDTO c) {
         String sql = "INSERT INTO Cliente (nombre_cliente, apellido_cliente, email_cliente, password_cliente, tipo_cliente, estado_cliente, id_empresa) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getNombreCliente());
             ps.setString(2, c.getApellidoCliente());
             ps.setString(3, c.getEmailCliente());
@@ -70,8 +67,7 @@ public class ClienteDAO {
 
     public void actualizarCliente(ClienteDTO c) {
         String sql = "UPDATE Cliente SET nombre_cliente=?, apellido_cliente=?, email_cliente=?, password_cliente=?, tipo_cliente=?, estado_cliente=?, id_empresa=? WHERE id_cliente=?";
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getNombreCliente());
             ps.setString(2, c.getApellidoCliente());
             ps.setString(3, c.getEmailCliente());
@@ -92,8 +88,7 @@ public class ClienteDAO {
 
     public void cambiarEstadoCliente(int idCliente, EstadoEnum estado) {
         String sql = "UPDATE Cliente SET estado_cliente=? WHERE id_cliente=?";
-        try (Connection conn = DriverManager.getConnection(url, user, pass);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setObject(1, estado.name(), java.sql.Types.OTHER);
             ps.setInt(2, idCliente);
             ps.executeUpdate();
@@ -101,4 +96,34 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
+
+    public List<ClienteDTO> listarPorEmpresa(int idEmpresa) {
+        List<ClienteDTO> lista = new ArrayList<>();
+        String sql = "SELECT id_cliente, nombre_cliente, apellido_cliente, email_cliente, "
+                + "       tipo_cliente, estado_cliente, id_empresa "
+                + "FROM Cliente "
+                + "WHERE id_empresa = ? AND estado_cliente = 'A' "
+                + "ORDER BY nombre_cliente, apellido_cliente";
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEmpresa);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ClienteDTO c = new ClienteDTO();
+                    c.setIdCliente(rs.getInt("id_cliente"));
+                    c.setNombreCliente(rs.getString("nombre_cliente"));
+                    c.setApellidoCliente(rs.getString("apellido_cliente"));
+                    c.setEmailCliente(rs.getString("email_cliente"));
+                    c.setTipoCliente(TipoClienteEnum.valueOf(rs.getString("tipo_cliente")));
+                    c.setEstadoCliente(EstadoEnum.valueOf(rs.getString("estado_cliente")));
+                    c.setIdEmpresa(rs.getInt("id_empresa"));
+                    lista.add(c);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    //Aquí añade más
 }

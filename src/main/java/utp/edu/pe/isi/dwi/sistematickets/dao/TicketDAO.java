@@ -93,7 +93,8 @@ public class TicketDAO {
 
     // Registrar Ticket (Cliente)
     public void registrarTicket(TicketDTO t) {
-        String sql = "INSERT INTO Solicitud (id_cliente, id_tipoSolicitud, id_aplicacion, asunto, motivo, estado, prioridad) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Solicitud (id_cliente, id_tipoSolicitud, id_aplicacion, asunto, motivo, estado, prioridad) "
+                + "VALUES (?, ?, ?, ?, ?, ?::estado_solicitud_enum, ?::prioridad_enum)";
         try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, t.getIdCliente());
             ps.setInt(2, t.getIdTipoSolicitud());
@@ -104,6 +105,7 @@ public class TicketDAO {
             }
             ps.setString(4, t.getAsunto());
             ps.setString(5, t.getMotivo());
+            // ahora puedes seguir con setString porque el SQL ya castea
             ps.setString(6, t.getEstado().name());
             ps.setString(7, t.getPrioridad().name());
             ps.executeUpdate();
@@ -159,6 +161,40 @@ public class TicketDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<TicketDTO> listarTodas() {
+        List<TicketDTO> lista = new ArrayList<>();
+        String sql = "SELECT s.*, c.nombre_cliente, ts.descripcion AS nombreTipoSolicitud, "
+                + "a.tipo_aplicacion AS nombreAplicacion "
+                + "FROM Solicitud s "
+                + "JOIN Cliente c ON s.id_cliente = c.id_cliente "
+                + "LEFT JOIN tipoSolicitud ts ON ts.id_tipoSolicitud = s.id_tipoSolicitud "
+                + "LEFT JOIN Aplicacion a ON a.id_aplicacion = s.id_aplicacion "
+                + "ORDER BY s.fecha_creacion DESC";
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                TicketDTO t = new TicketDTO();
+                t.setIdSolicitud(rs.getInt("id_solicitud"));
+                t.setIdCliente(rs.getInt("id_cliente"));
+                t.setIdTipoSolicitud(rs.getInt("id_tipoSolicitud"));
+                t.setIdAplicacion(rs.getObject("id_aplicacion") != null
+                        ? rs.getInt("id_aplicacion") : null);
+                t.setAsunto(rs.getString("asunto"));
+                t.setMotivo(rs.getString("motivo"));
+                t.setFechaCreacion(rs.getTimestamp("fecha_creacion"));
+                t.setEstado(EstadoSolicitudEnum.valueOf(rs.getString("estado")));
+                t.setPrioridad(PrioridadEnum.valueOf(rs.getString("prioridad")));
+                t.setFechaCierre(rs.getTimestamp("fecha_cierre"));
+                t.setNombreCliente(rs.getString("nombre_cliente"));
+                t.setNombreTipoSolicitud(rs.getString("nombreTipoSolicitud"));
+                t.setNombreAplicacion(rs.getString("nombreAplicacion"));
+                lista.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
     // Puedes añadir más métodos para uso del colaborador aquí...
 }

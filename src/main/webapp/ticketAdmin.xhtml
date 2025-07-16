@@ -18,10 +18,10 @@
             <div class="content-with-sidebar">
                 <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
                 <main class="main-content">
-                    <h3>Tickets Asignados</h3>
+                    <h3>Tickets Globales</h3>
 
                     <h:form id="formTicketsColab">
-                        <p:dataTable value="#{ticketBean.ticketsColaborador}" var="ticket"
+                        <p:dataTable value="#{ticketBean.ticketsTodos}" var="ticket"
                                      selection="#{ticketBean.ticketSeleccionado}" selectionMode="single" rowKey="#{ticket.idSolicitud}">
                             <p:column headerText="ID">
                                 <h:outputText value="#{ticket.idSolicitud}" />

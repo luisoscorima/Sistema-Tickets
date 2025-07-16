@@ -23,12 +23,13 @@ public class LoginDAO {
     /* ---------- CLIENTE ---------- */
     public ClienteDTO loginCliente(String email, String password) {
         String sql
-                = "SELECT id_cliente, nombre_cliente, apellido_cliente, email_cliente "
-                + "FROM   Cliente "
-                + "WHERE  email_cliente   = ? "
-                + "  AND  password_cliente = ? "
-                + "  AND  estado_cliente   = 'A'";
-        try (Connection c = DriverManager.getConnection(url, user, pass); PreparedStatement ps = c.prepareStatement(sql)) {
+            = "SELECT id_cliente, nombre_cliente, apellido_cliente, email_cliente, id_empresa "
+            + "FROM   Cliente "
+            + "WHERE  email_cliente   = ? "
+            + "  AND  password_cliente = ? "
+            + "  AND  estado_cliente   = 'A'";
+        try (Connection c = DriverManager.getConnection(url, user, pass);
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, password);
@@ -43,6 +44,9 @@ public class LoginDAO {
                 cli.setNombreCliente(rs.getString("nombre_cliente"));
                 cli.setApellidoCliente(rs.getString("apellido_cliente"));
                 cli.setEmailCliente(rs.getString("email_cliente"));
+                // <-- Aquí capturamos id_empresa
+                cli.setIdEmpresa(rs.getObject("id_empresa") != null
+                                 ? rs.getInt("id_empresa") : null);
                 return cli;
             }
         } catch (SQLException e) {
@@ -54,15 +58,16 @@ public class LoginDAO {
     /* ---------- COLABORADOR (incluye Admin) ---------- */
     public ColaboradorDTO loginColaborador(String email, String password) {
         String sql
-                = "SELECT c.id_colaborador, c.nombre_colab, c.apellido_colab, "
-                + "       c.email_colab, c.password_colab, c.id_rol, "
-                + "       r.nombre_rol, c.estado_colab "
-                + "FROM   Colaborador c "
-                + "JOIN   Rol r ON r.id_rol = c.id_rol "
-                + "WHERE  c.email_colab   = ? "
-                + "  AND  c.password_colab = ? "
-                + "  AND  c.estado_colab   = true";
-        try (Connection c = DriverManager.getConnection(url, user, pass); PreparedStatement ps = c.prepareStatement(sql)) {
+            = "SELECT c.id_colaborador, c.nombre_colab, c.apellido_colab, "
+            + "       c.email_colab, c.password_colab, c.id_rol, "
+            + "       r.nombre_rol, c.estado_colab "
+            + "FROM   Colaborador c "
+            + "JOIN   Rol r ON r.id_rol = c.id_rol "
+            + "WHERE  c.email_colab   = ? "
+            + "  AND  c.password_colab = ? "
+            + "  AND  c.estado_colab   = true";
+        try (Connection c = DriverManager.getConnection(url, user, pass);
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ps.setString(2, password);
@@ -79,7 +84,7 @@ public class LoginDAO {
                 col.setEmailColab(rs.getString("email_colab"));
                 col.setPasswordColab(rs.getString("password_colab"));
                 col.setIdRol(rs.getInt("id_rol"));
-                col.setNombreRol(rs.getString("nombre_rol"));  // <- CLAVE
+                col.setNombreRol(rs.getString("nombre_rol"));
                 col.setEstadoColab(rs.getBoolean("estado_colab"));
                 return col;
             }

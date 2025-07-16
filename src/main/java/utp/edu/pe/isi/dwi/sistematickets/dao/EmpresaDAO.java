@@ -24,23 +24,20 @@ public class EmpresaDAO {
     }
 
     public List<EmpresaDTO> listarEmpresas() {
-        List<EmpresaDTO> empresas = new ArrayList<>();
-        String sql = "SELECT * FROM Empresa ORDER BY id_empresa ASC";
-        try (Connection conn = DriverManager.getConnection(url, user, pass); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        List<EmpresaDTO> lista = new ArrayList<>();
+        String sql = "SELECT id_empresa, razon_social, estado_empresa FROM Empresa WHERE estado_empresa = 'A' ORDER BY razon_social";
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                EmpresaDTO emp = new EmpresaDTO();
-                emp.setIdEmpresa(rs.getInt("id_empresa"));
-                emp.setRuc(rs.getString("ruc"));
-                emp.setRazonSocial(rs.getString("razon_social"));
-                emp.setDireccion(rs.getString("direccion"));
-                emp.setTelefono(rs.getString("telefono"));
-                emp.setEstadoEmpresa(EstadoEnum.valueOf(rs.getString("estado_empresa")));
-                empresas.add(emp);
+                EmpresaDTO e = new EmpresaDTO();
+                e.setIdEmpresa(rs.getInt("id_empresa"));
+                e.setRazonSocial(rs.getString("razon_social"));
+                e.setEstadoEmpresa(EstadoEnum.valueOf(rs.getString("estado_empresa")));
+                lista.add(e);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        return empresas;
+        return lista;
     }
 
     public void registrarEmpresa(EmpresaDTO empresa) {

@@ -6,60 +6,77 @@
       xmlns:ui="jakarta.faces.facelets">
     <h:head>
         <title>Clientes</title>
-        <!-- Importante: tu CSS debe estar después del tema PrimeFaces -->
         <h:outputStylesheet library="css" name="custom.css"/>
     </h:head>
     <h:body>
         <div class="layout">
-            <!-- Navbar reutilizable -->
             <ui:include src="/WEB-INF/includes/navbar.xhtml"/>
             <div class="content-with-sidebar">
-                <!-- Sidebar reutilizable -->
                 <ui:include src="/WEB-INF/includes/sidebar.xhtml"/>
-                <!-- Contenido principal de la página -->
                 <main class="main-content">
+
                     <!-- Formulario de registro de cliente -->
-                    <h:form id="formRegistroCliente">
-                        <p:commandButton value="Volver" action="empresas?faces-redirect=true"/>
-                        <h2>Registrar Cliente</h2>
-                        <h:panelGrid columns="2">
+                    <h:form id="formRegistroCliente" style="margin-bottom:2rem;">
+
+                        <h3>
+                            #{loginBean.esCliente() ? 'Agregar Usuario a Mi Empresa' : 'Registrar Cliente'}
+                        </h3>
+
+                        <h:panelGrid columns="2" columnClasses="label,field" style="margin-top:1rem;">
                             <h:outputText value="Nombre:"/>
-                            <p:inputText value="#{clienteBean.nuevoCliente.nombreCliente}" />
+                            <p:inputText value="#{clienteBean.nuevoCliente.nombreCliente}" required="true"/>
+
                             <h:outputText value="Apellido:"/>
-                            <p:inputText value="#{clienteBean.nuevoCliente.apellidoCliente}" />
+                            <p:inputText value="#{clienteBean.nuevoCliente.apellidoCliente}" required="true"/>
+
                             <h:outputText value="Email:"/>
-                            <p:inputText value="#{clienteBean.nuevoCliente.emailCliente}" />
+                            <p:inputText value="#{clienteBean.nuevoCliente.emailCliente}" required="true"/>
+
                             <h:outputText value="Contraseña:"/>
-                            <p:password value="#{clienteBean.nuevoCliente.passwordCliente}" />
+                            <p:password value="#{clienteBean.nuevoCliente.passwordCliente}" required="true"/>
+
                             <h:outputText value="Tipo Cliente:"/>
                             <p:selectOneMenu value="#{clienteBean.nuevoCliente.tipoCliente}">
                                 <f:selectItems value="#{clienteBean.tiposCliente}" var="tipo"
                                                itemLabel="#{tipo.label}" itemValue="#{tipo}" />
                             </p:selectOneMenu>
+
                             <h:outputText value="Empresa:"/>
-                            <p:selectOneMenu value="#{clienteBean.nuevoCliente.idEmpresa}">
-                                <f:selectItem itemLabel="Sin Empresa" itemValue="#{null}" />
+                            <p:selectOneMenu value="#{clienteBean.nuevoCliente.idEmpresa}"
+                                             disabled="#{loginBean.esCliente()}">
+                                <f:selectItem itemLabel="Sin Empresa" itemValue="#{null}"
+                                              rendered="#{not loginBean.esCliente()}"/>
                                 <f:selectItems value="#{clienteBean.empresas}" var="emp"
-                                               itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
+                                               itemLabel="#{emp.razonSocial}"
+                                               itemValue="#{emp.idEmpresa}"
+                                               rendered="#{not loginBean.esCliente()}"/>
+                                <f:selectItem rendered="#{loginBean.esCliente()}"
+                                              itemLabel="#{clienteBean.obtenerNombreEmpresaPorId(loginBean.clienteLogueado.idEmpresa)}"
+                                              itemValue="#{loginBean.clienteLogueado.idEmpresa}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
-                        <p:commandButton value="Registrar" action="#{clienteBean.registrarCliente}" update="formClientes"/>
+
+                        <p:commandButton value="Registrar"
+                                         action="#{clienteBean.registrarCliente}"
+                                         update="formClientes,formRegistroCliente"/>
                     </h:form>
 
-                    <!-- Tabla de clientes -->
-                    <h2>Lista de Clientes</h2>
+                    <h2>
+                        #{loginBean.esCliente() ? 'Mi Teamwork' : 'Clientes'}
+                    </h2>
+                    <!-- Tabla de Clientes / Mi Teamwork -->
                     <h:form id="formClientes">
-                        <p:dataTable value="#{clienteBean.clientes}" var="cli"
-                                     selection="#{clienteBean.clienteSeleccionado}" selectionMode="single"
-                                     rowKey="#{cli.idCliente}">
+                        <p:dataTable value="#{loginBean.esCliente() ? clienteBean.clientesPorEmpresa : clienteBean.clientes}"
+                                     var="cli"
+                                     selection="#{clienteBean.clienteSeleccionado}"
+                                     selectionMode="single"
+                                     rowKey="#{cli.idCliente}"
+                                     paginator="true" rows="10">
                             <p:column headerText="ID">
                                 <h:outputText value="#{cli.idCliente}" />
                             </p:column>
                             <p:column headerText="Nombre">
-                                <h:outputText value="#{cli.nombreCliente}" />
-                            </p:column>
-                            <p:column headerText="Apellido">
-                                <h:outputText value="#{cli.apellidoCliente}" />
+                                <h:outputText value="#{cli.nombreCliente} #{cli.apellidoCliente}" />
                             </p:column>
                             <p:column headerText="Email">
                                 <h:outputText value="#{cli.emailCliente}" />
@@ -67,13 +84,15 @@
                             <p:column headerText="Tipo">
                                 <h:outputText value="#{cli.tipoCliente.label}" />
                             </p:column>
-                            <p:column headerText="Empresa">
+                            <p:column headerText="Empresa"
+                                      rendered="#{not loginBean.esCliente()}">
                                 <h:outputText value="#{clienteBean.obtenerNombreEmpresaPorId(cli.idEmpresa)}"/>
                             </p:column>
-                            <p:column headerText="Estado">
+                            <p:column headerText="Estado"
+                                      rendered="#{not loginBean.esCliente()}">
                                 <h:outputText value="#{cli.estadoCliente.label}" />
                             </p:column>
-                            <p:column>
+                            <p:column headerText="Acciones" rendered="#{not loginBean.esCliente()}">
                                 <p:commandButton value="Editar"
                                                  action="#{clienteBean.seleccionarParaEditar(cli)}"
                                                  oncomplete="PF('dlgEditarCliente').show()"
@@ -85,29 +104,36 @@
                         </p:dataTable>
                     </h:form>
 
-                    <!-- Diálogo para editar cliente -->
-                    <p:dialog header="Editar Cliente" widgetVar="dlgEditarCliente" modal="true">
+                    <!-- Diálogo para editar cliente (solo admin) -->
+                    <p:dialog header="Editar Cliente" widgetVar="dlgEditarCliente" modal="true"
+                              resizable="false" closable="true" appendTo="@(body)"
+                              rendered="#{not loginBean.esCliente()}">
                         <h:form id="formEditarCliente">
-                            <h:panelGrid columns="2">
+                            <h:panelGrid columns="2" columnClasses="label,field">
                                 <h:outputText value="Nombre:"/>
-                                <p:inputText value="#{clienteBean.clienteSeleccionado.nombreCliente}" />
+                                <p:inputText value="#{clienteBean.clienteSeleccionado.nombreCliente}" required="true"/>
+
                                 <h:outputText value="Apellido:"/>
-                                <p:inputText value="#{clienteBean.clienteSeleccionado.apellidoCliente}" />
+                                <p:inputText value="#{clienteBean.clienteSeleccionado.apellidoCliente}" required="true"/>
+
                                 <h:outputText value="Email:"/>
-                                <p:inputText value="#{clienteBean.clienteSeleccionado.emailCliente}" />
+                                <p:inputText value="#{clienteBean.clienteSeleccionado.emailCliente}" required="true"/>
+
                                 <h:outputText value="Contraseña:"/>
                                 <p:password value="#{clienteBean.clienteSeleccionado.passwordCliente}" />
+
                                 <h:outputText value="Tipo Cliente:"/>
                                 <p:selectOneMenu value="#{clienteBean.clienteSeleccionado.tipoCliente}">
                                     <f:selectItems value="#{clienteBean.tiposCliente}" var="tipo"
                                                    itemLabel="#{tipo.label}" itemValue="#{tipo}" />
                                 </p:selectOneMenu>
+
                                 <h:outputText value="Empresa:"/>
                                 <p:selectOneMenu value="#{clienteBean.clienteSeleccionado.idEmpresa}">
-                                    <f:selectItem itemLabel="Sin Empresa" itemValue="#{null}" />
                                     <f:selectItems value="#{clienteBean.empresas}" var="emp"
                                                    itemLabel="#{emp.razonSocial}" itemValue="#{emp.idEmpresa}" />
                                 </p:selectOneMenu>
+
                                 <h:outputText value="Estado:"/>
                                 <p:selectOneMenu value="#{clienteBean.clienteSeleccionado.estadoCliente}">
                                     <f:selectItems value="#{clienteBean.estados}" var="est"
@@ -117,9 +143,10 @@
                             <p:commandButton value="Guardar"
                                              action="#{clienteBean.actualizarCliente}"
                                              oncomplete="PF('dlgEditarCliente').hide()"
-                                             update=":formClientes"/>
+                                             update="formClientes"/>
                         </h:form>
                     </p:dialog>
+
                 </main>
             </div>
         </div>
