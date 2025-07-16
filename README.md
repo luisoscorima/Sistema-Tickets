@@ -2,7 +2,7 @@
 
 ---
 
-[![Static Badge](https://img.shields.io/badge/Probar-Demo-Color)](https://tickets.creart.tech/)
+[![Probar DEMO](https://img.shields.io/badge/Probar%20DEMO-%F0%9F%94%8D-green)](https://tickets.creart.tech/)
 
 ---
 
