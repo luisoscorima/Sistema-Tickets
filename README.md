@@ -2,7 +2,7 @@
 
 ---
 
-![Static Badge](https://img.shields.io/badge/Probar%20Demo-text?style=plastic&link=https%3A%2F%2Ftickets.creart.tech%2F)
+![Static Badge](https://img.shields.io/badge/Probar%20Demo-text?style=plastic)(https://tickets.creart.tech/)
 
 ---
 
