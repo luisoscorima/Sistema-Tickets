@@ -36,6 +36,7 @@ public class DashboardBean implements Serializable {
             kpis.put("total", dashboardDAO.contarTicketsTotal());
             kpis.put("A", dashboardDAO.contarTicketsPorEstado("A"));
             kpis.put("B", dashboardDAO.contarTicketsPorEstado("B"));
+            kpis.put("C", dashboardDAO.contarTicketsPorEstado("C"));
             kpis.put("P", dashboardDAO.contarTicketsPorEstado("P"));
             kpis.put("S", dashboardDAO.contarTicketsPorEstado("S"));
             kpis.put("N", dashboardDAO.contarTicketsPorEstado("N"));
@@ -44,6 +45,7 @@ public class DashboardBean implements Serializable {
             kpis.put("total", dashboardDAO.contarTicketsPorColaborador(idColab));
             kpis.put("A", dashboardDAO.contarTicketsPorEstadoYColaborador("A", idColab));
             kpis.put("B", dashboardDAO.contarTicketsPorEstadoYColaborador("B", idColab));
+            kpis.put("C", dashboardDAO.contarTicketsPorEstadoYColaborador("C", idColab));
             kpis.put("P", dashboardDAO.contarTicketsPorEstadoYColaborador("P", idColab));
             kpis.put("S", dashboardDAO.contarTicketsPorEstadoYColaborador("S", idColab));
             kpis.put("N", dashboardDAO.contarTicketsPorEstadoYColaborador("N", idColab));
@@ -52,23 +54,24 @@ public class DashboardBean implements Serializable {
             kpis.put("total", dashboardDAO.contarTicketsPorCliente(idCliente));
             kpis.put("A", dashboardDAO.contarTicketsPorEstadoYCliente("A", idCliente));
             kpis.put("B", dashboardDAO.contarTicketsPorEstadoYCliente("B", idCliente));
+            kpis.put("C", dashboardDAO.contarTicketsPorEstadoYCliente("C", idCliente));
             kpis.put("P", dashboardDAO.contarTicketsPorEstadoYCliente("P", idCliente));
             kpis.put("S", dashboardDAO.contarTicketsPorEstadoYCliente("S", idCliente));
             kpis.put("N", dashboardDAO.contarTicketsPorEstadoYCliente("N", idCliente));
         }
 
         if (loginBean.esAdmin()) {
-            for (String estado : new String[]{"A", "B", "P", "S", "N"}) {
+            for (String estado : new String[]{"A", "B", "C", "P", "S", "N"}) {
                 ticketsPorEstado.put(estado, dashboardDAO.ticketsPorEstado(estado));
             }
         } else if (loginBean.esColaborador()) {
             int idColab = loginBean.getColaboradorLogueado().getIdColaborador();
-            for (String estado : new String[]{"A", "B", "P", "S", "N"}) {
+            for (String estado : new String[]{"A", "B", "C", "P", "S", "N"}) {
                 ticketsPorEstado.put(estado, dashboardDAO.ticketsPorEstadoYColaborador(estado, idColab));
             }
         } else if (loginBean.esCliente()) {
             int idCliente = loginBean.getClienteLogueado().getIdCliente();
-            for (String estado : new String[]{"A", "B", "P", "S", "N"}) {
+            for (String estado : new String[]{"A", "B", "C", "P", "S", "N"}) {
                 ticketsPorEstado.put(estado, dashboardDAO.ticketsPorEstadoYCliente(estado, idCliente));
             }
         }

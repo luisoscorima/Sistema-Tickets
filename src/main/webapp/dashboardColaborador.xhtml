@@ -30,6 +30,10 @@
                             <span class="kpi-value">#{dashboardBean.kpi('B')}</span>
                         </div>
                         <div class="kpi-card">
+                            <span class="kpi-label">Programado</span>
+                            <span class="kpi-value">#{dashboardBean.kpi('C')}</span>
+                        </div>
+                        <div class="kpi-card">
                             <span class="kpi-label">Pendientes</span>
                             <span class="kpi-value">#{dashboardBean.kpi('P')}</span>
                         </div>
@@ -61,6 +65,17 @@
                         <div class="kanban-column">
                             <div class="kanban-title">Asignadas</div>
                             <ui:repeat value="#{dashboardBean.ticketsPorEstado['B']}" var="ticket">
+                                <div class="kanban-card">
+                                    <b>#{ticket.asunto}</b>
+                                    <div class="estado">Prioridad: #{ticket.prioridad}</div>
+                                    <div><b>Motivo:</b> #{ticket.motivo}</div>
+                                </div>
+                            </ui:repeat>
+                        </div>
+                        <!-- Columna Programado -->
+                        <div class="kanban-column">
+                            <div class="kanban-title">Programado</div>
+                            <ui:repeat value="#{dashboardBean.ticketsPorEstado['C']}" var="ticket">
                                 <div class="kanban-card">
                                     <b>#{ticket.asunto}</b>
                                     <div class="estado">Prioridad: #{ticket.prioridad}</div>
