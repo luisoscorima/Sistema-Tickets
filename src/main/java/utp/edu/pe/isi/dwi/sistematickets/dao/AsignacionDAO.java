@@ -24,7 +24,8 @@ public class AsignacionDAO {
 
     public List<AsignacionDTO> listarAsignacionesPorSolicitud(int idSolicitud) {
         List<AsignacionDTO> lista = new ArrayList<>();
-        String sql = "SELECT a.*, c.nombre_colab AS nombreColaborador "
+        String sql = "SELECT a.id_asignacion, a.id_solicitud, a.id_colaborador, a.es_coordinador, "
+                + "a.fecha_asignacion, c.nombre_colab AS nombreColaborador "
                 + "FROM Asignacion a "
                 + "LEFT JOIN Colaborador c ON c.id_colaborador = a.id_colaborador "
                 + "WHERE a.id_solicitud = ?";
@@ -35,9 +36,9 @@ public class AsignacionDAO {
                     AsignacionDTO dto = new AsignacionDTO();
                     dto.setIdAsignacion(rs.getInt("id_asignacion"));
                     dto.setIdSolicitud(rs.getInt("id_solicitud"));
-                    dto.setIdColaborador(rs.getObject("id_colaborador") != null ? rs.getInt("id_colaborador") : null);
-                    dto.setFechaAsignacion(rs.getTimestamp("fecha_asignacion"));
+                    dto.setIdColaborador(rs.getInt("id_colaborador"));
                     dto.setEsCoordinador(rs.getBoolean("es_coordinador"));
+                    dto.setFechaAsignacion(rs.getTimestamp("fecha_asignacion"));
                     dto.setNombreColaborador(rs.getString("nombreColaborador"));
                     lista.add(dto);
                 }
@@ -76,5 +77,19 @@ public class AsignacionDAO {
         return null;
     }
 
+    public void upsertAsignacion(int idSolicitud, int idColaborador, boolean esCoordinador) {
+        String sql = "INSERT INTO Asignacion (id_solicitud, id_colaborador, es_coordinador) "
+                + "VALUES (?, ?, ?) "
+                + "ON CONFLICT (id_solicitud, id_colaborador) DO UPDATE "
+                + "SET es_coordinador = EXCLUDED.es_coordinador";
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idSolicitud);
+            ps.setInt(2, idColaborador);
+            ps.setBoolean(3, esCoordinador);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     // Métodos adicionales para actualizar o eliminar asignación si los necesitas
 }

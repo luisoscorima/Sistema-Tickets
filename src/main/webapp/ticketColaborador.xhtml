@@ -26,7 +26,7 @@
                                 <h:outputText value="#{ticket.idSolicitud}" />
                             </p:column>
                             <p:column headerText="Cliente">
-                                <h:outputText value="#{ticket.nombreCliente}" />
+                                <h:outputText value="#{ticket.nombreCliente} #{ticket.apellidoCliente}" />
                             </p:column>
                             <p:column headerText="Tipo">
                                 <h:outputText value="#{ticket.nombreTipoSolicitud}" />
@@ -50,14 +50,16 @@
                                 <!-- Editar ticket (si aplica) -->
                                 <p:commandButton value="Actualizar"
                                                  action="#{ticketBean.setTicketSeleccionado(ticket)}"
-                                                 oncomplete="PF('dlgEditTicketColab').show()" update=":formEditTicketColab"/>
+                                                 oncomplete="PF('dlgEditTicketColab').show()"
+                                                 update=":formEditTicketColab"/>
 
                                 <!-- Asignar solo si soy coordinador de ese ticket -->
-                                <p:commandButton value="Asignar"
-                                                 rendered="#{asignacionBean.esCoordinadorDelTicket(ticket.idSolicitud)}"
-                                                 action="#{asignacionBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
-                                                 oncomplete="PF('dlgAsignar').show()"
-                                                 update=":formAsignar"/>
+                                <p:commandButton
+                                    value="Asignar"
+                                    rendered="#{loginBean.esAdmin() or asignacionBean.puedeAsignar(ticket.idSolicitud)}"
+                                    action="#{asignacionBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
+                                    oncomplete="PF('dlgAsignar').show()"
+                                    update=":formAsignar"/>
                                 <!-- Botón o icono para ver/registrar actividades de un ticket -->
                                 <p:commandButton value="Ver Actividades" 
                                                  action="#{actividadBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
@@ -69,18 +71,24 @@
                     </h:form>
 
                     <!-- Modal para actualizar ticket -->
-                    <p:dialog header="Actualizar Ticket" widgetVar="dlgEditTicketColab" modal="true">
+                    <p:dialog header="Actualizar Ticket" widgetVar="dlgEditTicketColab" modal="true" dynamic="true" appendTo="@(body)">
                         <h:form id="formEditTicketColab">
-                            <h:panelGrid columns="2">
+                            <h:panelGrid columns="2" rendered="#{not empty ticketBean.ticketSeleccionado.idSolicitud}">
                                 <h:outputText value="Motivo:"/>
                                 <p:inputTextarea value="#{ticketBean.ticketSeleccionado.motivo}" />
                                 <h:outputText value="Prioridad:"/>
                                 <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.prioridad}">
+                                    <f:selectItem itemLabel="— selecciona prioridad —"
+                                                  itemValue="#{null}"
+                                                  noSelectionOption="true"/>
                                     <f:selectItems value="#{ticketBean.prioridades}" var="prio"
                                                    itemLabel="#{prio.label}" itemValue="#{prio}" />
                                 </p:selectOneMenu>
                                 <h:outputText value="Estado:"/>
                                 <p:selectOneMenu value="#{ticketBean.ticketSeleccionado.estado}">
+                                    <f:selectItem itemLabel="— selecciona estado —"
+                                                  itemValue="#{null}"
+                                                  noSelectionOption="true"/>
                                     <f:selectItems value="#{ticketBean.estados}" var="est"
                                                    itemLabel="#{est.label}" itemValue="#{est}" />
                                 </p:selectOneMenu>
@@ -92,21 +100,28 @@
                     </p:dialog>
 
                     <!-- Modal para asignar colaborador -->
-                    <p:dialog header="Asignar Colaborador" widgetVar="dlgAsignar" modal="true">
+                    <p:dialog widgetVar="dlgAsignar" modal="true" header="Asignar Colaborador">
                         <h:form id="formAsignar">
-                            <h:panelGrid columns="2">
+                            <p:panelGrid columns="2">
                                 <h:outputText value="Colaborador:"/>
                                 <p:selectOneMenu value="#{asignacionBean.nuevaAsignacion.idColaborador}">
-                                    <f:selectItems value="#{asignacionBean.colaboradores}" var="colab"
-                                                   itemLabel="#{colab.nombreColab} #{colab.apellidoColab}" itemValue="#{colab.idColaborador}"/>
+                                    <f:selectItems value="#{asignacionBean.colaboradores}"
+                                                   var="c"
+                                                   itemValue="#{c.idColaborador}"
+                                                   itemLabel="#{c.nombreColab} #{c.apellidoColab}"/>
                                 </p:selectOneMenu>
+
                                 <h:outputText value="¿Es Coordinador?"/>
-                                <p:selectBooleanCheckbox value="#{asignacionBean.nuevaAsignacion.esCoordinador}" />
-                            </h:panelGrid>
-                            <p:commandButton value="Asignar"
-                                             action="#{asignacionBean.registrarAsignacion}"
-                                             oncomplete="PF('dlgAsignar').hide();"
-                                             update=":formTicketsColab"/>
+                                <p:selectBooleanCheckbox 
+                                    value="#{asignacionBean.nuevaAsignacion.esCoordinador}"
+                                    disabled="#{!loginBean.esAdmin()}" />
+                            </p:panelGrid>
+
+                            <p:commandButton
+                                value="Guardar"
+                                action="#{asignacionBean.registrarAsignacion}"
+                                oncomplete="PF('dlgAsignar').hide()"
+                                update=":formTicketsColab, formAsignar"/>
                         </h:form>
                     </p:dialog>
 
@@ -133,7 +148,8 @@
                                 <p:selectBooleanCheckbox value="#{actividadBean.nuevaActividad.esFinal}" />
                                 <p:commandButton value="Registrar"
                                                  action="#{actividadBean.registrarActividad}"
-                                                 update="formActividades"/>
+                                                 update="formActividades, :formTicketsColab"
+                                                 oncomplete="PF('dlgActividades').hide()" />
                             </h:panelGrid>
                             <h:outputText value="Este ticket ya está solucionado. No se pueden agregar más actividades."
                                           rendered="#{actividadBean.ticketEstaSolucionado()}" style="color:red"/>

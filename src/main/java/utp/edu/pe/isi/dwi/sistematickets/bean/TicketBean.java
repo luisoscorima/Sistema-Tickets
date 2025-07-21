@@ -15,7 +15,8 @@ import java.util.List;
 
 @Named("ticketBean")
 @SessionScoped
-@Getter @Setter
+@Getter
+@Setter
 public class TicketBean implements Serializable {
 
     @Inject
@@ -72,6 +73,17 @@ public class TicketBean implements Serializable {
 
     public void cerrarTicketCliente(int idSolicitud) {
         ticketDAO.cerrarTicket(idSolicitud);
+    }
+
+    public void seleccionarParaEditar(TicketDTO t) {
+        this.ticketSeleccionado = t;
+        // Si vienen null, les asigno un valor por defecto
+        if (t.getPrioridad() == null) {
+            t.setPrioridad(PrioridadEnum.values()[0]);
+        }
+        if (t.getEstado() == null) {
+            t.setEstado(EstadoSolicitudEnum.values()[0]);
+        }
     }
 
     public PrioridadEnum[] getPrioridades() {

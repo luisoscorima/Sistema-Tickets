@@ -1,8 +1,10 @@
 package utp.edu.pe.isi.dwi.sistematickets.dto;
+
+import lombok.Data;
 import utp.edu.pe.isi.dwi.sistematickets.enums.EstadoSolicitudEnum;
 import utp.edu.pe.isi.dwi.sistematickets.enums.PrioridadEnum;
 import java.sql.Timestamp;
-import lombok.Data;
+import java.util.List;
 
 @Data
 public class TicketDTO {
@@ -16,11 +18,14 @@ public class TicketDTO {
     private EstadoSolicitudEnum estado;
     private PrioridadEnum prioridad;
     private Timestamp fechaCierre;
-
-    // Extras para mostrar en tabla o modales
+    // Extras para la UI
     private String nombreCliente;
+    private String apellidoCliente;
     private String nombreTipoSolicitud;
     private String nombreAplicacion;
-    // Si quieres agregar nombre del colaborador asignado, agrégalo aquí
-    private String nombreColaboradorAsignado;
+    // Asignaciones
+    private Integer idCoordinador;
+    private List<Integer> colaboradoresAsignados;
+    private String nombreCoordinador;
+    private List<String> nombresColaboradores;
 }

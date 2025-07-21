@@ -57,7 +57,7 @@ public class TicketDAO {
 
     public List<TicketDTO> listarTicketsPorColaborador(int idColaborador) {
         List<TicketDTO> lista = new ArrayList<>();
-        String sql = "SELECT s.*, c.nombre_cliente, ts.descripcion AS nombreTipoSolicitud, a.tipo_aplicacion AS nombreAplicacion "
+        String sql = "SELECT s.*, c.nombre_cliente, c.apellido_cliente, ts.descripcion AS nombreTipoSolicitud, a.tipo_aplicacion AS nombreAplicacion "
                 + "FROM Solicitud s "
                 + "JOIN Asignacion agn ON agn.id_solicitud = s.id_solicitud "
                 + "JOIN Cliente c ON c.id_cliente = s.id_cliente "
@@ -80,6 +80,7 @@ public class TicketDAO {
                     t.setPrioridad(PrioridadEnum.valueOf(rs.getString("prioridad")));
                     t.setFechaCierre(rs.getTimestamp("fecha_cierre"));
                     t.setNombreCliente(rs.getString("nombre_cliente"));
+                    t.setApellidoCliente(rs.getString("apellido_cliente"));
                     t.setNombreTipoSolicitud(rs.getString("nombreTipoSolicitud"));
                     t.setNombreAplicacion(rs.getString("nombreAplicacion"));
                     lista.add(t);
@@ -116,7 +117,7 @@ public class TicketDAO {
 
     // Actualizar Ticket (Cliente)
     public void actualizarTicket(TicketDTO t) {
-        String sql = "UPDATE Solicitud SET asunto=?, motivo=?, prioridad=? WHERE id_solicitud=?";
+        String sql = "UPDATE Solicitud SET asunto=?, motivo=?, prioridad=?::prioridad_enum WHERE id_solicitud=?";
         try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, t.getAsunto());
             ps.setString(2, t.getMotivo());
@@ -165,7 +166,7 @@ public class TicketDAO {
 
     public List<TicketDTO> listarTodas() {
         List<TicketDTO> lista = new ArrayList<>();
-        String sql = "SELECT s.*, c.nombre_cliente, ts.descripcion AS nombreTipoSolicitud, "
+        String sql = "SELECT s.*, c.nombre_cliente, c.apellido_cliente, ts.descripcion AS nombreTipoSolicitud, "
                 + "a.tipo_aplicacion AS nombreAplicacion "
                 + "FROM Solicitud s "
                 + "JOIN Cliente c ON s.id_cliente = c.id_cliente "
@@ -187,6 +188,7 @@ public class TicketDAO {
                 t.setPrioridad(PrioridadEnum.valueOf(rs.getString("prioridad")));
                 t.setFechaCierre(rs.getTimestamp("fecha_cierre"));
                 t.setNombreCliente(rs.getString("nombre_cliente"));
+                t.setApellidoCliente(rs.getString("apellido_cliente"));
                 t.setNombreTipoSolicitud(rs.getString("nombreTipoSolicitud"));
                 t.setNombreAplicacion(rs.getString("nombreAplicacion"));
                 lista.add(t);

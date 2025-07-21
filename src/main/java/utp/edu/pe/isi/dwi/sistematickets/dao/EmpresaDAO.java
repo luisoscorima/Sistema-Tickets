@@ -25,12 +25,15 @@ public class EmpresaDAO {
 
     public List<EmpresaDTO> listarEmpresas() {
         List<EmpresaDTO> lista = new ArrayList<>();
-        String sql = "SELECT id_empresa, razon_social, estado_empresa FROM Empresa WHERE estado_empresa = 'A' ORDER BY razon_social";
+        String sql = "SELECT id_empresa, ruc, razon_social, direccion, telefono, estado_empresa FROM Empresa ORDER BY id_empresa";
         try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 EmpresaDTO e = new EmpresaDTO();
                 e.setIdEmpresa(rs.getInt("id_empresa"));
+                e.setRuc(rs.getString("ruc"));
                 e.setRazonSocial(rs.getString("razon_social"));
+                e.setDireccion(rs.getString("direccion"));
+                e.setTelefono(rs.getString("telefono"));
                 e.setEstadoEmpresa(EstadoEnum.valueOf(rs.getString("estado_empresa")));
                 lista.add(e);
             }

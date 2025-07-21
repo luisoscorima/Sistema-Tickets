@@ -1,7 +1,7 @@
 package utp.edu.pe.isi.dwi.sistematickets.dto;
 
-import java.sql.Timestamp;
 import lombok.Data;
+import java.sql.Timestamp;
 
 @Data
 public class AsignacionDTO {
@@ -10,6 +10,6 @@ public class AsignacionDTO {
     private Integer idColaborador;
     private Timestamp fechaAsignacion;
     private Boolean esCoordinador;
-    // Extras si los necesitas:
-    private String nombreColaborador; // Para mostrar en tablas
+    // Para mostrar en tablas
+    private String nombreColaborador;
 }

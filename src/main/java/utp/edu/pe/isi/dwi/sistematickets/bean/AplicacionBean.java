@@ -4,6 +4,7 @@ import utp.edu.pe.isi.dwi.sistematickets.dao.AplicacionDAO;
 import utp.edu.pe.isi.dwi.sistematickets.dao.EmpresaDAO;
 import utp.edu.pe.isi.dwi.sistematickets.dto.AplicacionDTO;
 import utp.edu.pe.isi.dwi.sistematickets.dto.EmpresaDTO;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -19,11 +20,23 @@ public class AplicacionBean implements Serializable {
     @Inject private EmpresaDAO   empresaDAO;
     @Inject private LoginBean    loginBean;
 
-    // **Propiedades que necesita JSF**
-    private AplicacionDTO nuevaAplicacion = new AplicacionDTO();
-    private AplicacionDTO aplicacionSeleccionada = new AplicacionDTO();
+    private AplicacionDTO nuevaAplicacion;
+    private AplicacionDTO aplicacionSeleccionada;
 
-    // --- getters & setters ---
+    @PostConstruct
+    public void init() {
+        // Inicializamos los DTO
+        nuevaAplicacion = new AplicacionDTO();
+        aplicacionSeleccionada = new AplicacionDTO();
+
+        // Si es cliente, fijamos su empresa en el nuevo registro
+        if (loginBean.esCliente()) {
+            Integer miEmpresa = loginBean.getClienteLogueado().getIdEmpresa();
+            nuevaAplicacion.setIdEmpresa(miEmpresa);
+        }
+    }
+
+    // getters & setters necesarios para JSF
     public AplicacionDTO getNuevaAplicacion() {
         return nuevaAplicacion;
     }
@@ -37,7 +50,6 @@ public class AplicacionBean implements Serializable {
     public void setAplicacionSeleccionada(AplicacionDTO aplicacionSeleccionada) {
         this.aplicacionSeleccionada = aplicacionSeleccionada;
     }
-    // -------------------------
 
     /** Dropdown de empresas */
     public List<EmpresaDTO> getEmpresas() {
@@ -67,14 +79,18 @@ public class AplicacionBean implements Serializable {
     /** CRUD */
     public void registrarAplicacion() {
         aplicacionDAO.registrarAplicacion(nuevaAplicacion);
-        nuevaAplicacion = new AplicacionDTO();
+        // Volvemos a inicializar para limpiar el formulario
+        init();
     }
+
     public void actualizarAplicacion() {
         aplicacionDAO.actualizarAplicacion(aplicacionSeleccionada);
     }
+
     public void eliminarAplicacion(int id) {
         aplicacionDAO.eliminarAplicacion(id);
     }
+
     public void seleccionarParaEditar(AplicacionDTO a) {
         this.aplicacionSeleccionada = a;
     }

@@ -67,20 +67,19 @@ public class ActividadBean implements Serializable {
     }
 
     public void registrarActividad() {
-        // BUSCA id_asignacion según colaborador y ticket
         Integer idAsignacion = asignacionDAO.obtenerIdAsignacionPorSolicitudYColaborador(
                 idSolicitudSeleccionada,
                 loginBean.getColaboradorLogueado().getIdColaborador()
         );
         nuevaActividad.setIdAsignacion(idAsignacion);
-
         nuevaActividad.setIdColaborador(loginBean.getColaboradorLogueado().getIdColaborador());
         actividadDAO.registrarActividad(nuevaActividad);
 
-        // Si la actividad es final, actualiza estado del ticket
         if (Boolean.TRUE.equals(nuevaActividad.getEsFinal()) && idSolicitudSeleccionada != null) {
-            ticketDAO.actualizarEstadoTicket(idSolicitudSeleccionada, EstadoSolicitudEnum.S); // “S” es Solucionado
+            ticketDAO.actualizarEstadoTicket(idSolicitudSeleccionada, EstadoSolicitudEnum.S);
         }
+
+        // refrescamos el DTO para el siguiente registro
         nuevaActividad = new ActividadDTO();
     }
 

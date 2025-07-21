@@ -1,90 +1,127 @@
 package utp.edu.pe.isi.dwi.sistematickets.bean;
 
 import jakarta.annotation.PostConstruct;
-import utp.edu.pe.isi.dwi.sistematickets.dao.AsignacionDAO;
-import utp.edu.pe.isi.dwi.sistematickets.dto.AsignacionDTO;
-import utp.edu.pe.isi.dwi.sistematickets.dao.ColaboradorDAO;
-import utp.edu.pe.isi.dwi.sistematickets.dto.ColaboradorDTO;
-import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
-import java.io.IOException;
+import jakarta.inject.Named;
+import lombok.Getter;
+import lombok.Setter;
+import utp.edu.pe.isi.dwi.sistematickets.dao.AsignacionDAO;
+import utp.edu.pe.isi.dwi.sistematickets.dao.ColaboradorDAO;
+import utp.edu.pe.isi.dwi.sistematickets.dao.TicketDAO;
+import utp.edu.pe.isi.dwi.sistematickets.dto.AsignacionDTO;
+import utp.edu.pe.isi.dwi.sistematickets.dto.ColaboradorDTO;
+import utp.edu.pe.isi.dwi.sistematickets.enums.EstadoSolicitudEnum;
+import utp.edu.pe.isi.dwi.sistematickets.bean.LoginBean;
 import java.io.Serializable;
 import java.util.List;
 
 @Named("asignacionBean")
 @SessionScoped
+@Getter
+@Setter
 public class AsignacionBean implements Serializable {
 
-    public void verificarAcceso() {
-        FacesContext ctx = FacesContext.getCurrentInstance();
-        LoginBean loginBean = (LoginBean) ctx.getExternalContext().getSessionMap().get("loginBean");
-        if (loginBean == null || !loginBean.esColaborador()) {
-            try {
-                ctx.getExternalContext().redirect("login.xhtml");
-                ctx.responseComplete(); // <--- ¡Esto es importante!
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    @Inject private AsignacionDAO asignacionDAO;
+    @Inject private ColaboradorDAO colaboradorDAO;
+    @Inject private LoginBean loginBean;
+    @Inject private TicketDAO ticketDAO;
 
-    @Inject
-    private AsignacionDAO asignacionDAO;
-    @Inject
-    private ColaboradorDAO colaboradorDAO;
-    @Inject
-    private LoginBean loginBean;
-
-    private AsignacionDTO nuevaAsignacion = new AsignacionDTO();
+    /**
+     * ID del ticket seleccionado para asignar
+     */
     private Integer idSolicitudSeleccionada;
 
-    public List<AsignacionDTO> getAsignacionesPorSolicitud() {
-        if (idSolicitudSeleccionada != null) {
-            return asignacionDAO.listarAsignacionesPorSolicitud(idSolicitudSeleccionada);
-        }
-        return null;
-    }
+    /**
+     * DTO usado para la nueva asignación
+     */
+    private AsignacionDTO nuevaAsignacion;
 
-    public List<ColaboradorDTO> getColaboradores() {
-        return colaboradorDAO.listarColaboradores();
-    }
+    /**
+     * Cache de las asignaciones actuales del ticket
+     */
+    private List<AsignacionDTO> asignaciones;
 
-    public AsignacionDTO getNuevaAsignacion() {
-        return nuevaAsignacion;
-    }
-
-    public void setNuevaAsignacion(AsignacionDTO a) {
-        this.nuevaAsignacion = a;
-    }
-
-    public Integer getIdSolicitudSeleccionada() {
-        return idSolicitudSeleccionada;
-    }
-
-    public void setIdSolicitudSeleccionada(Integer id) {
-        this.idSolicitudSeleccionada = id;
-    }
-
-    public void registrarAsignacion() {
-        if (nuevaAsignacion.getIdSolicitud() == null && idSolicitudSeleccionada != null) {
-            nuevaAsignacion.setIdSolicitud(idSolicitudSeleccionada);
-        }
-        asignacionDAO.asignarColaborador(nuevaAsignacion);
+    @PostConstruct
+    public void init() {
         nuevaAsignacion = new AsignacionDTO();
     }
 
-    // Este método retorna TRUE si el colaborador logueado es coordinador para ese ticket
-    public boolean esCoordinadorDelTicket(int idSolicitud) {
-        Integer idColab = loginBean.getColaboradorLogueado().getIdColaborador();
-        List<AsignacionDTO> asignaciones = asignacionDAO.listarAsignacionesPorSolicitud(idSolicitud);
-        for (AsignacionDTO asg : asignaciones) {
-            if (idColab.equals(asg.getIdColaborador()) && Boolean.TRUE.equals(asg.getEsCoordinador())) {
-                return true;
-            }
-        }
-        return false;
+    /**
+     * Devuelve sólo los colaboradores activos para el dropdown
+     */
+    public List<ColaboradorDTO> getColaboradores() {
+        return colaboradorDAO.listarColaboradoresActivos();
     }
 
+    /**
+     * Cuando el usuario abre el modal de Asignar, cargamos la lista actual y
+     * preparamos el DTO vacío.
+     */
+    public void setIdSolicitudSeleccionada(Integer id) {
+        this.idSolicitudSeleccionada = id;
+        this.asignaciones = asignacionDAO.listarAsignacionesPorSolicitud(id);
+        this.nuevaAsignacion = new AsignacionDTO();
+        this.nuevaAsignacion.setIdSolicitud(id);
+    }
+
+    /**
+     * Getter para la lista de asignaciones mostrada en la vista
+     */
+    public List<AsignacionDTO> getAsignaciones() {
+        return asignaciones;
+    }
+
+    /**
+     * Comprueba si el colaborador logueado es coordinador del ticket dado (para
+     * habilitar/deshabilitar el botón).
+     */
+    public boolean esCoordinadorDelTicket(Integer idSolicitud) {
+        Integer miId = loginBean.getColaboradorLogueado().getIdColaborador();
+        return asignacionDAO.listarAsignacionesPorSolicitud(idSolicitud)
+                .stream()
+                .anyMatch(a
+                        -> a.getIdColaborador().equals(miId)
+                && Boolean.TRUE.equals(a.getEsCoordinador())
+                );
+    }
+
+    /**
+     * Permite asignar si eres Admin o coordinador del ticket (método usado en
+     * rendered="#{asignacionBean.puedeAsignar(...) }")
+     */
+    public boolean puedeAsignar(Integer idSolicitud) {
+        return loginBean.esAdmin() || esCoordinadorDelTicket(idSolicitud);
+    }
+
+    /**
+     * Inserta o actualiza la asignación: - Si no existía, la inserta. - Si ya
+     * existía (mismo ticket+colaborador), actualiza sólo el flag de
+     * coordinador.
+     */
+    public void registrarAsignacion() {
+        boolean pedirCoordinador = Boolean.TRUE.equals(nuevaAsignacion.getEsCoordinador());
+        // Solo admin puede asignar coordinadores
+        if (!loginBean.esAdmin()) {
+            nuevaAsignacion.setEsCoordinador(false);
+        }
+
+        asignacionDAO.upsertAsignacion(
+                idSolicitudSeleccionada,
+                nuevaAsignacion.getIdColaborador(),
+                Boolean.TRUE.equals(nuevaAsignacion.getEsCoordinador())
+        );
+
+        // Si un admin acaba de poner un coordinador, marcamos el ticket como ASIGNADO
+        if (loginBean.esAdmin() && pedirCoordinador) {
+            ticketDAO.actualizarEstadoTicket(
+                    idSolicitudSeleccionada,
+                    EstadoSolicitudEnum.B
+            );
+        }
+
+        this.asignaciones = asignacionDAO.listarAsignacionesPorSolicitud(idSolicitudSeleccionada);
+        this.nuevaAsignacion = new AsignacionDTO();
+        this.nuevaAsignacion.setIdSolicitud(idSolicitudSeleccionada);
+    }
 }

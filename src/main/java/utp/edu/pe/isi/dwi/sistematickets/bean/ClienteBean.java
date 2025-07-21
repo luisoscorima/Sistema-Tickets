@@ -29,13 +29,21 @@ public class ClienteBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        // Inicializamos DTOs
+        // Creamos DTOs con valores por defecto
         nuevoCliente = new ClienteDTO();
         clienteSeleccionado = new ClienteDTO();
-        // Si el usuario es Cliente, fijamos su empresa y no permitimos cambiarla
+
+        // Asignamos un valor inicial a tipoCliente para que nunca sea null
+        TipoClienteEnum defaultTipo = TipoClienteEnum.values()[0];
+        nuevoCliente.setTipoCliente(defaultTipo);
+        clienteSeleccionado.setTipoCliente(defaultTipo);
+
+        // Si el usuario es Cliente, fijamos idEmpresa en nuevoCliente
         if (loginBean.esCliente()) {
             Integer miEmpresa = loginBean.getClienteLogueado().getIdEmpresa();
             nuevoCliente.setIdEmpresa(miEmpresa);
+            // para el form de edición también podríamos fijarlo
+            clienteSeleccionado.setIdEmpresa(miEmpresa);
         }
     }
 
@@ -71,7 +79,15 @@ public class ClienteBean implements Serializable {
         return clienteSeleccionado;
     }
     public void setClienteSeleccionado(ClienteDTO clienteSeleccionado) {
+        // Al seleccionar para editar, asegúrate de que no quede ningún campo null
         this.clienteSeleccionado = clienteSeleccionado;
+        if (this.clienteSeleccionado.getTipoCliente() == null) {
+            this.clienteSeleccionado.setTipoCliente(TipoClienteEnum.values()[0]);
+        }
+        if (!loginBean.esCliente() && this.clienteSeleccionado.getIdEmpresa() == null) {
+            // como admin, deja “Sin Empresa” si es null
+            this.clienteSeleccionado.setIdEmpresa(null);
+        }
     }
 
     public void registrarCliente() {
@@ -80,7 +96,7 @@ public class ClienteBean implements Serializable {
             nuevoCliente.setEstadoCliente(EstadoEnum.A);
         }
         clienteDAO.registrarCliente(nuevoCliente);
-        // Reset y volver a fijar empresa
+        // Limpiamos y volvemos a cargar defaults
         init();
     }
 
@@ -93,10 +109,6 @@ public class ClienteBean implements Serializable {
                                 ? EstadoEnum.I
                                 : EstadoEnum.A;
         clienteDAO.cambiarEstadoCliente(c.getIdCliente(), nuevoEstado);
-    }
-
-    public void seleccionarParaEditar(ClienteDTO c) {
-        this.clienteSeleccionado = c;
     }
 
     public TipoClienteEnum[] getTiposCliente() {

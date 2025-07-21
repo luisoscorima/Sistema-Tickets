@@ -83,4 +83,25 @@ public class ColaboradorDAO {
             e.printStackTrace();
         }
     }
+
+    public List<ColaboradorDTO> listarColaboradoresActivos() {
+        List<ColaboradorDTO> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Colaborador WHERE estado_colab = true ORDER BY id_colaborador";
+        try (Connection conn = DriverManager.getConnection(url, user, pass); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ColaboradorDTO c = new ColaboradorDTO();
+                c.setIdColaborador(rs.getInt("id_colaborador"));
+                c.setNombreColab(rs.getString("nombre_colab"));
+                c.setApellidoColab(rs.getString("apellido_colab"));
+                c.setEmailColab(rs.getString("email_colab"));
+                c.setPasswordColab(rs.getString("password_colab"));
+                c.setIdRol(rs.getInt("id_rol"));
+                c.setEstadoColab(rs.getBoolean("estado_colab"));
+                lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
 }
