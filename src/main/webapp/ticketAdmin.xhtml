@@ -55,7 +55,7 @@
 
                                 <!-- Asignar solo si soy coordinador de ese ticket -->
                                 <p:commandButton value="Asignar"
-                                                 rendered="#{asignacionBean.esCoordinadorDelTicket(ticket.idSolicitud)}"
+                                                 action="#{asignacionBean.setIdSolicitudSeleccionada(ticket.idSolicitud)}"
                                                  oncomplete="PF('dlgAsignar').show()"
                                                  update=":formAsignar"/>
                                 <!-- Botón o icono para ver/registrar actividades de un ticket -->
